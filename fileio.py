@@ -26,40 +26,39 @@ i = 0
 
 with open(fileRead, 'r') as rf:
     with open(fileWrite, 'w') as wf:
-        # re_s = compiled to only find strings that contain capital letters
+        # re_CL = compiled to only find strings that contain capital letters
         re_CL = re.compile('[A-Z]+')
         for line in rf:
             linesRead += 1
             t = re_CL.search(line)
             if t:
-                startPos = t.end()+1
-                if t.group() == 'BEGIN':
+                startPos = t.end()+1  # Starting position of wanted string
+                if t.group() in 'BEGIN':
                     newIon = Ion()
                     i += 1
-                elif t.group() == 'TITLE':
+                elif t.group() in 'TITLE':
                     newIon.title = line[startPos:]
-                elif t.group() == 'PEPMASS':
+                elif t.group() in 'PEPMASS':
                     newIon.pepmass.initFromLine(startPos, line)
-                elif t.group() == 'CHARGE':
+                elif t.group() in 'CHARGE':
                     newIon.charge = line[startPos:]
-                elif t.group() == 'RTINSECONDS':
+                elif t.group() in 'RTINSECONDS':
                     newIon.RT = line[startPos:]
-                elif t.group() == 'SCANS':
+                elif t.group() in 'SCANS':
                     newIon.scans = line[startPos:]
-                elif t.group() == 'END':
+                elif t.group() in 'END':
                     hm.writeToFile(wf, newIon)
                     del newIon
-#                   print(str(i))
             # TODO: put while loop here (within if t:)
             # while !re.search(r'\bEND', line):
             # look at each mz & intensity and if it matches: save
             else:
-                o = re.search(r'[1-9]', line)
+                # Read lines with numbers only
+#                o = re.search(r'[1-9]', line)
+                o = re.findall(r'\S[0-9.]+[^ A-Za-z=]', line)
                 if o:
+#                    print(o[0])
                     newIon.addPep(line)
-
-
-#       print(i)
 
     wf.close()
 rf.close()
