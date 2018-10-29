@@ -13,7 +13,7 @@ import helperMethods as hm
 
 
 # main - call methods to be executed
-fileRead = 'small.mgf'
+fileRead = 'smallProb.mgf'
 # 'QEHF_180716_15.mgf'
 # 'small.mgf'
 # 'Text.txt'
@@ -21,13 +21,13 @@ fileWrite = 'sec.txt'
 
 
 aTolerance = 1.000
-linesRead = 1
+linesRead = 0
 i = 0
 
 with open(fileRead, 'r') as rf:
     with open(fileWrite, 'w') as wf:
         # re_CL = compiled to only find strings that contain capital letters
-        re_CL = re.compile('[A-Z]+')
+        re_CL = re.compile('[A-Z]{2,}')
         for line in rf:
             linesRead += 1
             t = re_CL.search(line)
@@ -36,17 +36,17 @@ with open(fileRead, 'r') as rf:
                 if t.group() in 'BEGIN':
                     newIon = Ion()
                     i += 1
-                elif t.group() in 'TITLE':
+                elif 'TITLE' in t.group():
                     newIon.title = line[startPos:]
-                elif t.group() in 'PEPMASS':
+                elif 'PEPMASS' in t.group():
                     newIon.pepmass.initFromLine(startPos, line)
-                elif t.group() in 'CHARGE':
+                elif 'CHARGE' in t.group():
                     newIon.charge = line[startPos:]
-                elif t.group() in 'RTINSECONDS':
+                elif 'RTINSECONDS' in t.group():
                     newIon.RT = line[startPos:]
-                elif t.group() in 'SCANS':
+                elif 'SCANS' in t.group():
                     newIon.scans = line[startPos:]
-                elif t.group() in 'END':
+                elif 'END' in t.group():
                     hm.writeToFile(wf, newIon)
                     del newIon
             # TODO: put while loop here (within if t:)
@@ -55,8 +55,8 @@ with open(fileRead, 'r') as rf:
             else:
                 # Read lines with numbers only
 #                o = re.search(r'[1-9]', line)
-                o = re.findall(r'\S[0-9.]+[^ A-Za-z=]', line)
-                if o:
+                valueArray = re.findall(r'\S[0-9.+-Ee]+[^ A-DF-Za-df-z=]', line)
+                if valueArray:
 #                    print(o[0])
                     newIon.addPep(line)
 

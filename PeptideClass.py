@@ -27,8 +27,8 @@ class Peptide:
         # t[:]
         theLine = theLine[startPos:]
         t = re.search(r'\b ', theLine)
-        self.m_z = theLine[:t.end()-1]
-        self.intensity = theLine[t.end():]
+        self.m_z = float(theLine[:t.end()-1])
+        self.intensity = float(theLine[t.end():])
 
     def pepStr(self):
         aStr = str(self.m_z) + ' ' + str(self.intensity)
