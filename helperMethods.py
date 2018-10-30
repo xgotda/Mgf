@@ -9,15 +9,12 @@ Created on Wed Oct 24 10:51:30 2018
 
 def writeToFile(FileName, IonObject):
     if FileName and IonObject:
-        FileName.write('TITLE: ' + IonObject.title +
-                       '\t'
-                       + IonObject.pepmass.pepStr() +
-                       '\t'
+        FileName.write('TITLE: ' + IonObject.title + '\t'
 #        FileName.write(str(IonObject.scans))
-                       + 'fragments:   '
-                       + str(len(IonObject.fragments[0])) +
-                       '\n')
-#                        IonObject.fragments[0].pepStr() + '\n')
+                       + 'fragments:   ' + str(len(IonObject.fragments[0])) + '\t'
+                       + IonObject.pepmass.pepStr()
+                       + '\n'
+                       )
 #        FileName.write('TITLE: ' + IonObject.title)
 #        FileName.write(IonObject.pepmass.pepStr())
 ##        FileName.write(str(IonObject.scans))
