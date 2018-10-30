@@ -23,42 +23,39 @@ fileWrite = 'sec.txt'
 aTolerance = 1.000
 linesRead = 0
 i = 0
+find = [111.04450, 111.08083, 113.06006, 115.07567, 119.08573,
+        121.10140, 123.08068, 125.05994, 125.09627, 127.03926]
+
+
+def stripLine(aline):
+    return aline.split('=')[1].strip()
 
 with open(fileRead, 'r') as rf:
     with open(fileWrite, 'w') as wf:
-        # re_CL = compiled to only find strings that contain capital letters
-        re_CL = re.compile('[A-Z]{2,}')
         for line in rf:
             linesRead += 1
-            t = re_CL.search(line)
-            if t:
-                startPos = t.end()+1  # Starting position of wanted string
-                if t.group() in 'BEGIN':
-                    newIon = Ion()
-                    i += 1
-                elif 'TITLE' in t.group():
-                    newIon.title = line[startPos:]
-                elif 'PEPMASS' in t.group():
-                    newIon.pepmass.initFromLine(startPos, line)
-                elif 'CHARGE' in t.group():
-                    newIon.charge = line[startPos:]
-                elif 'RTINSECONDS' in t.group():
-                    newIon.RT = line[startPos:]
-                elif 'SCANS' in t.group():
-                    newIon.scans = line[startPos:]
-                elif 'END' in t.group():
-                    hm.writeToFile(wf, newIon)
-                    del newIon
-            # TODO: put while loop here (within if t:)
-            # while !re.search(r'\bEND', line):
-            # look at each mz & intensity and if it matches: save
-            else:
-                # Read lines with numbers only
-#                o = re.search(r'[1-9]', line)
-                valueArray = re.findall(r'\S[0-9.+-Ee]+[^ A-DF-Za-df-z=]', line)
-                if valueArray:
-#                    print(o[0])
-                    newIon.addPep(line)
+            if 'BEGIN' in line:
+                newIon = Ion()
+                i += 1
+                line = rf.readline()
+                while 'END' not in line:
+                    if '=' in line:
+                        if 'TITLE' in line:
+                            newIon.title = stripLine(line)
+                        elif 'PEPMASS' in line:
+                            newIon.pepmass.initFromLine(0, line.split('=')[1])
+                        elif 'CHARGE' in line:
+                            newIon.charge = stripLine(line)
+                        elif 'RTINSECONDS' in line:
+                            newIon.RT = stripLine(line)
+                        elif 'SCANS' in line:
+                            newIon.scans = stripLine(line)
+                    else:
+                        newIon.addPep(line)
+                    line = rf.readline()
+
+                hm.writeToFile(wf, newIon)
+                del newIon
 
     wf.close()
 rf.close()
