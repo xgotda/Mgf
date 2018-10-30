@@ -7,7 +7,7 @@ Created on Wed Oct 10 12:06:52 2018
 """
 
 # import sys
-import re
+# import re
 from IonClass import Ion
 import helperMethods as hm
 
@@ -23,12 +23,9 @@ fileWrite = 'sec.txt'
 aTolerance = 1.000
 linesRead = 0
 i = 0
-find = [111.04450, 111.08083, 113.06006, 115.07567, 119.08573,
-        121.10140, 123.08068, 125.05994, 125.09627, 127.03926]
+findMZ = [111.04450, 111.08083, 113.06006, 115.07567, 119.08573,
+          121.10140, 123.08068, 125.05994, 125.09627, 127.03926]
 
-
-def stripLine(aline):
-    return aline.split('=')[1].strip()
 
 with open(fileRead, 'r') as rf:
     with open(fileWrite, 'w') as wf:
@@ -41,20 +38,24 @@ with open(fileRead, 'r') as rf:
                 while 'END' not in line:
                     if '=' in line:
                         if 'TITLE' in line:
-                            newIon.title = stripLine(line)
+                            newIon.title = hm.stripLine(line)
                         elif 'PEPMASS' in line:
-                            newIon.pepmass.initFromLine(0, line.split('=')[1])
+                            newIon.pepmass.frLine(line.split('=')[1])
                         elif 'CHARGE' in line:
-                            newIon.charge = stripLine(line)
+                            newIon.charge = hm.stripLine(line)
                         elif 'RTINSECONDS' in line:
-                            newIon.RT = stripLine(line)
+                            newIon.RT = hm.stripLine(line)
                         elif 'SCANS' in line:
-                            newIon.scans = stripLine(line)
+                            newIon.scans = hm.stripLine(line)
                     else:
-                        newIon.addFr(line)
+                        tempVals = hm.pepLine(line)
+                        for f in findMZ:
+                            if hm.compare(f, tempVals[0], aTolerance):
+                                newIon.addFr(tempVals)
                     line = rf.readline()
 
-                hm.writeToFile(wf, newIon)
+                if newIon.fragments:
+                    hm.writeToFile(wf, newIon)
                 del newIon
     wf.close()
 rf.close()

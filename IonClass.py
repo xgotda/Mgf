@@ -22,12 +22,12 @@ class Ion():
         self.pepmass = Peptide()
         self.fragments = []
 
-    def addFr(self,valuesToAdd):
+    def addFr(self, valuesToAdd):
         if len(self.fragments) == 0:
             self.fragments = [[float(valuesToAdd[0])], [float(valuesToAdd[1])]]
         else:
-            self.fragments[0].append(float(valuesToAdd[0]))
-            self.fragments[1].append(float(valuesToAdd[1]))
+            self.fragsMZs().append(float(valuesToAdd[0]))
+            self.fragsIntens().append(float(valuesToAdd[1]))
 
     def addPep(self, lineRead):
         tempPep = Peptide()
@@ -36,4 +36,16 @@ class Ion():
 #        tempPep.intensity = insty
         self.fragments.append(tempPep)
 
-# TODO: Convert fragments to array when performing min, max etc stuff.
+    def fragsMZs(self):
+        ''' returns a list of m_z values '''
+        if len(self.fragments):
+            return self.fragments[0]
+        else:
+            return []
+
+    def fragsIntens(self):
+        ''' returns a list of intensities '''
+        if len(self.fragments):
+            return self.fragments[1]
+        else:
+            return []

@@ -6,8 +6,6 @@ Created on Fri Oct 12 15:06:27 2018
 @author: xgotda
 """
 
-import re
-
 
 class Peptide:
 
@@ -15,28 +13,11 @@ class Peptide:
         self.m_z = 0.0
         self.intensity = 0.0
 
-
-
-
-
-
-
-# set startPos as startPos=0 (default value) such that it 
-#        has to be set only when not 0.
-    def initFromLine(self, startPos, theLine):
-        ''' t is the MatchObject which resulted in the line beginning with
-             'PEPMASS' being found. Used for position of first number.
-             line from file is the line currently read from file which
-             will here be split into mz and intensity values
-             and saved into the object. '''
-        # t = re.findall(r'\S[0-9.]+[^ A-Za-z=]', line)
-        # t[:]
-        theLine = theLine[startPos:]
-        t = re.search(r'\b ', theLine)
-        self.m_z = float(theLine[:t.end()-1])
-        self.intensity = float(theLine[t.end():])
+    def frLine(self, theLine):
+        theLine = theLine.split(' ')
+        self.m_z = float(theLine[0])
+        self.intensity = float(theLine[1])
 
     def pepStr(self):
         aStr = str(self.m_z) + ' ' + str(self.intensity)
         return aStr
-
