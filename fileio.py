@@ -33,7 +33,7 @@ with open(fileRead, 'r') as rf:
             t = re_CL.search(line)
             if t:
                 startPos = t.end()+1  # Starting position of wanted string
-                if t.group() in 'BEGIN':
+                if 'BEGIN' in t.group():
                     newIon = Ion()
                     i += 1
                 elif 'TITLE' in t.group():
@@ -54,11 +54,10 @@ with open(fileRead, 'r') as rf:
             # look at each mz & intensity and if it matches: save
             else:
                 # Read lines with numbers only
-#                o = re.search(r'[1-9]', line)
                 valueArray = re.findall(r'\S[0-9.+-Ee]+[^ A-DF-Za-df-z=]', line)
                 if valueArray:
 #                    print(o[0])
-                    newIon.addPep(line)
+                    newIon.addFr(valueArray)
 
     wf.close()
 rf.close()

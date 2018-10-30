@@ -22,15 +22,12 @@ class Ion():
         self.pepmass = Peptide()
         self.fragments = []
 
-#    def clear(self):
-#        self.valid = False
-#        self.title = ""
-#        self.charge = ""
-#        self.RT = 0
-#        self.scans = 0
-#        self.pepmass = []
-#        #self.pepmass = Peptide()
-#        self.fragments = []
+    def addFr(self,valuesToAdd):
+        if len(self.fragments) == 0:
+            self.fragments = [[float(valuesToAdd[0])], [float(valuesToAdd[1])]]
+        else:
+            self.fragments[0].append(float(valuesToAdd[0]))
+            self.fragments[1].append(float(valuesToAdd[1]))
 
     def addPep(self, lineRead):
         tempPep = Peptide()
@@ -38,3 +35,5 @@ class Ion():
 #        tempPep.m_z = mz
 #        tempPep.intensity = insty
         self.fragments.append(tempPep)
+
+# TODO: Convert fragments to array when performing min, max etc stuff.

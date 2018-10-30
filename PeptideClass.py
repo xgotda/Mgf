@@ -15,6 +15,12 @@ class Peptide:
         self.m_z = 0.0
         self.intensity = 0.0
 
+
+
+
+
+
+
 # set startPos as startPos=0 (default value) such that it 
 #        has to be set only when not 0.
     def initFromLine(self, startPos, theLine):
