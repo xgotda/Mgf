@@ -10,15 +10,21 @@ import math
 
 def writeToFile(FileName, IonObject):
     if FileName and IonObject:
-        FileName.write('TITLE: ' + IonObject.title + '\t'
-                       + 'fragments:   ' + str(len(IonObject.fragsMZs()))
-                       + '\t'
-                       + IonObject.pepmass.pepStr()
-                       + '\n'
-                       + '\t \t maxIntensity:'
-                       + str(max(IonObject.fragsIntens()))
-                       + '\n'
-                       )
+#        TODO: create a buffer?
+        info = (IonObject.scanNo + '\t'
+                + str(IonObject.pepmass.m_z) + '\t'
+                + str(IonObject.charge) + '\t'
+                + str(IonObject.Mass) + '\t'
+                + IonObject.RT + '\t'
+                + str(max(IonObject.fragmentIntensities())) + '\t'
+                + str(IonObject.fragmentCount)
+                )
+
+#       TODO: for each item in list of values to find?
+        for i in range(IonObject.fragmentCount):
+            info = info + '\t' + str(IonObject.fragmentValues()[i])
+
+        FileName.write(info + '\n')
     else:
         print('invalid objects')
 
