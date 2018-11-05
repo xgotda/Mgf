@@ -80,5 +80,3 @@ def ProcessMgf():
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))
     print('Added: ' + str(i))
-
-ProcessMgf()
