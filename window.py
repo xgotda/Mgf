@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton,
                              QLabel, QInputDialog, QFileDialog)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, QRect
-from fileio import ProcessMgf, setTol, aTolerance
+from fileio import ProcessMgf, aTolerance
+#setTol,
 
 
 class App(QMainWindow):
@@ -41,7 +42,6 @@ class App(QMainWindow):
         r = QRect(450, 30, 70, 40)
         processingBtn.setGeometry(r)
         processingBtn.clicked.connect(self.on_click)
-    
 
     def init_saveBtn(self):
         saveBtn = QPushButton('Save', self)
@@ -63,7 +63,7 @@ class App(QMainWindow):
 
     @pyqtSlot()
     def on_click(self):
-        setTol(self, float(self.tolerance_txtbox.text()))
+#        setTol(self, float(self.tolerance_txtbox.text()))
         print('Processing mgf.')
         print('Tolerance: ' + str(aTolerance))
         startTime = time.time()
@@ -77,10 +77,13 @@ class App(QMainWindow):
     def on_save(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self,"QFileDialog.getSaveFileName()",
-                        "","All Files (*);;Text Files (*.txt)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(
+                self,
+                "QFileDialog.getSaveFileName()", "",
+                "All Files (*);;Text Files (*.txt)", options=options)
         if fileName:
             print(fileName)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
