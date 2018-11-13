@@ -7,10 +7,10 @@
     "start": "electron .",
     "build": "electron-packager . /builds/testAppEP --platform=win32 --arch=x64 --asar"
   },
-  //"repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
     "Electron",
-    "mgf",
+    "mgf"
   ],
 
   "author": "xgotda",

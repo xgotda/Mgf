@@ -1,6 +1,6 @@
-__py*
-/.ipynb_*
-ipython.html
-*.mgf
-/.vscode
+/builds
+/gui/node_mod*
+/engine/__p*
+/engine/window.py
+/mgfFiles
 *.txt
