@@ -4,3 +4,4 @@
 /engine/window.py
 /mgfFiles
 *.txt
+.ipynb_*
