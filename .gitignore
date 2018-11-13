@@ -4,3 +4,6 @@ ipython.html
 *.mgf
 /.vscode
 *.txt
+builds/
+engine/
+gui/
