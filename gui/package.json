@@ -1,0 +1,20 @@
+{
+  "name": "Electron mgf",
+  "version": "1.0.0",
+  "description": "Mini mgf",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . /builds/testAppEP --platform=win32 --arch=x64 --asar"
+  },
+  //"repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "mgf",
+  ],
+
+  "author": "xgotda",
+  "devDependencies": {
+    "electron": "^3.0.4"
+  }
+}
