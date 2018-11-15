@@ -6,7 +6,7 @@ Created on Fri Nov  2 12:50:54 2018
 @author: xgotda
 """
 
-_H = 1.00727647
+_Hplus = 1.00727647
 ''' Mass of a proton in atomic mass units (u) '''
 
 #   To be filtered by in the Spectra file

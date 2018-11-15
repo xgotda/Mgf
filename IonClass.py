@@ -12,11 +12,10 @@ import staticVariables as sV
 
 
 class Ions():
-    # self.valid is a flag denoting if we have had at least one match
 
     def __init__(self):
 
-        self.valid = False
+        self.valid = False  # flag denoting if we have had at least one match
         self.title = ""
         self.charge = 0
         self.RT = 0
@@ -30,7 +29,7 @@ class Ions():
         ''' calculate the mass of the peptide
         @return: Mass of original peptide
         @rtype: float '''
-        self.Mass = float(self.charge * (self.pepmass.m_z - sV._H))
+        self.Mass = float(self.charge * (self.pepmass.m_z - sV._Hplus))
         return self.Mass
 
     def addFragment(self, vals):
@@ -72,4 +71,3 @@ class Ions():
             return self.fragments[2]
         else:
             return []
-            

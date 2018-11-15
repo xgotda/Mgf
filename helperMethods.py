@@ -34,19 +34,17 @@ def stripLine(aline):
 
 
 def pepLine(aLine):
-    ''' Split the string of a fragment into it's m/z 
-        and intensity values. 
+    ''' Split the string of a fragment into it's m/z
+        and intensity float values.
         @return: list with an m/z and intensity value
         @rtype: list of two float values'''
     aLine = aLine.split(' ')
-    m_z = float(aLine[0])
-    intensity = float(aLine[1])
-    return [m_z, intensity]
+    return [float(aLine[0]), float(aLine[1])]
 
 
 def compare(tofind, value, tolerance):
     ''' Compare wether two values are within
-        the given tolerance. 
+        the given tolerance.
         @return: True if within the tolerance, False if not.
         @rtype: boolean '''
     return math.fabs(value - tofind) < tolerance
