@@ -43,7 +43,7 @@ def pepLine(aLine):
 
 
 def compare(tofind, value, tolerance):
-    ''' Compare wether two values are within
+    ''' Compare whether two values are within
         the given tolerance.
         @return: True if within the tolerance, False if not.
         @rtype: boolean '''
