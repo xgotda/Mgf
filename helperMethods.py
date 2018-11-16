@@ -42,9 +42,10 @@ def pepLine(aLine):
     return [float(aLine[0]), float(aLine[1])]
 
 
-def compare(tofind, value, tolerance):
+def compare(tofind, value, ppm):
     ''' Compare whether two values are within
         the given tolerance.
         @return: True if within the tolerance, False if not.
         @rtype: boolean '''
+        tolerance = (tofind/1000000)*ppm
     return math.fabs(value - tofind) < tolerance

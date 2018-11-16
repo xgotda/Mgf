@@ -10,12 +10,13 @@ Created on Wed Oct 10 12:06:52 2018
 # sys.path.append('../plymgf')
 # import re
 from IonClass import Ions
-import helperMethods as hm
+# import helperMethods as hm
+from helperMethods import *
 import staticVariables as sV
 
 
 # main - call methods to be executed
-fileRead = 'QEHF_180716_15.mgf'
+fileRead = 'mgfFiles/smallProb.mgf'
 # 'smallProb.mgf'
 # 'QEHF_180716_15.mgf'
 # 'small.mgf'
@@ -23,7 +24,7 @@ fileRead = 'QEHF_180716_15.mgf'
 fileWrite = 'sec.txt'
 
 
-aTolerance = 0.010
+mass_accuracy_ppm = 0.010
 findMZ = [204.08667, 274.0921, 366.1395]
 
 
@@ -52,27 +53,27 @@ def ProcessMgf():
                     while 'END' not in line:
                         if '=' in line:
                             if 'TITLE' in line:
-                                newIon.title = hm.stripLine(line)
+                                newIon.title = stripLine(line)
                             elif 'PEPMASS' in line:
                                 newIon.pepmass.frLine(line.split('=')[1])
                             elif 'CHARGE' in line:
                                 newIon.charge = int(line.split('=')[1][0])
                             elif 'RTINSECONDS' in line:
-                                newIon.RT = hm.stripLine(line)
+                                newIon.RT = stripLine(line)
                             elif 'SCANS' in line:
-                                newIon.scanNo = hm.stripLine(line)
+                                newIon.scanNo = stripLine(line)
                         else:
-                            tempVals = hm.pepLine(line)
+                            tempVals = pepLine(line)
 #                            count = 0
                             for toFind in findMZ:
-                                if hm.compare(toFind, tempVals[0], aTolerance):
+                                if compare(toFind, tempVals[0], mass_accuracy_ppm):
                                     newIon.addFragment(tempVals)
                         line = rf.readline()
 
                     if newIon.fragments:
                         i += 1
                         newIon.calculateMass()
-                        hm.writeToFile(wf, newIon)
+                        writeToFile(wf, newIon)
                     del newIon
         wf.close()
     rf.close()
