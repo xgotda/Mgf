@@ -9,11 +9,11 @@ Created on Fri Oct 12 15:06:27 2018
 # Definitions of types
 _G = 'G'
 _P = 'P'
-_O = 'O'
+_M = 'M'
 
 pType = { _G = 'Glycan',
           _P = 'Peptide',
-          _O = 'Potential'
+          _M = 'McPeptide'  # Multi-charged peptide
         }
 #   TODO: fix ptype definitions such that the correct thing
 #       HAS to be entered when setting ptype
@@ -82,13 +82,13 @@ class FindMcPep(FindPep):
 
     def __init__(self, charge = chType[_double], parent = 0.0):
         super(FindMcPep, self).__init__()
-        self.ptype = pType[_O]
+        self.ptype = pType[_M]
         self.chType = charge
         self.parentPep = parent
 
     @ptype.setter
     def ptype(self, type):
-        ''' FindMcPep can only be of ptype _O.
+        ''' FindMcPep can only be of ptype _M.
             Do not change. '''
         pass
 
