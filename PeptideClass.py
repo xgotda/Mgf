@@ -5,15 +5,17 @@ Created on Fri Oct 12 15:06:27 2018
 
 @author: xgotda
 """
+import staticVariables as sV
+
 
 # Definitions of types
 _G = 'G'
 _P = 'P'
 _M = 'M'
 
-pType = { _G = 'Glycan',
-          _P = 'Peptide',
-          _M = 'McPeptide'  # Multi-charged peptide
+pType = { _G : 'Glycan',
+          _P : 'Peptide',
+          _M : 'McPeptide'  # Multi-charged peptide
         }
 #   TODO: fix ptype definitions such that the correct thing
 #       HAS to be entered when setting ptype
@@ -54,7 +56,7 @@ class FindPep(Pep):
     def __init__(self, tolerance = 0.0, type = pType[_G]):
         self.tol = tolerance
         self.ptype = type
-        self.chType = chType[_single]
+        self.chType = chType[sV._single]
 
     @property
     def ptype(self):
@@ -91,11 +93,15 @@ class FindMcPep(FindPep):
                 charge type,
                 parentPeptide. """
 
-    def __init__(self, charge = chType[_double], parent = 0.0):
+    def __init__(self, charge = sV.chType[sV._double], parent = 0.0):
         super(FindMcPep, self).__init__()
         self.ptype = pType[_M]
         self.chType = charge
         self.parentPep = parent
+
+    @property
+    def ptype(self):
+        return super(FindMcPep, self).ptype
 
     @ptype.setter
     def ptype(self, type):
@@ -103,10 +109,14 @@ class FindMcPep(FindPep):
             Do not change. '''
         pass
 
+    @property
+    def chType(self):
+        return super(FindMcPep, self).chType
+
     @chType.setter
     def chType(self, chargeType):
         ''' Set charge type. Doubly or triply charged. '''
-        if chargeType in [_double, _triple]:
+        if chargeType in [sV._double, _triple]:
             self.chType = chType[chargeType]
         else:
             print()
