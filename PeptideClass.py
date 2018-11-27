@@ -34,8 +34,8 @@ class Peptide(Pep):
     """ Peptide from the original molecule itself.
         @params: m/z, intensity. """
 
-    def __init__(self, intensity = 0.0):
-        super(Pep, self).__init__()
+    def __init__(self, m_z = 0.0, intensity = 0.0):
+        super().__init__(m_z)
         self.intensity = intensity
 
     def frLine(self, theLine):
@@ -53,10 +53,12 @@ class FindPep(Pep):
                 peptide type,
                 charge type = _single """
 
-    def __init__(self, tolerance = 0.0, type = pType[_G]):
+    def __init__(self, m_z = 0.0,
+                 tolerance = 0.0, type = _G):
+        super().__init__(m_z)
         self.tol = tolerance
         self.ptype = type
-        self.chType = chType[sV._single]
+        self.chType = sV.chType[sV._single]
 
     @property
     def ptype(self):
@@ -93,8 +95,10 @@ class FindMcPep(FindPep):
                 charge type,
                 parentPeptide. """
 
-    def __init__(self, charge = sV.chType[sV._double], parent = 0.0):
-        super(FindMcPep, self).__init__()
+    def __init__(self, m_z = 0.0, tolerance = 0.0,
+                 charge = sV.chType[sV._double],
+                 parent = 0.0):
+        super().__init__(m_z, tolerance,)
         self.ptype = pType[_M]
         self.chType = charge
         self.parentPep = parent
@@ -116,8 +120,8 @@ class FindMcPep(FindPep):
     @chType.setter
     def chType(self, chargeType):
         ''' Set charge type. Doubly or triply charged. '''
-        if chargeType in [sV._double, _triple]:
-            self.chType = chType[chargeType]
+        if chargeType in [sV._double, sV._triple]:
+            self.chType = sV.chType[chargeType]
         else:
             print()
 
