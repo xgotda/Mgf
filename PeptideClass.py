@@ -22,7 +22,7 @@ pType = { _G = 'Glycan',
 
 class Pep:
     """ Base object for Glycans and Peptides.
-        Has m/z. """
+        @params: m/z. """
 
     def __init__(self, m_z = 0.0):
         self.mz = m_z
@@ -30,7 +30,7 @@ class Pep:
 
 class Peptide(Pep):
     """ Peptide from the original molecule itself.
-        Has m/z and intensity. """
+        @params: m/z, intensity. """
 
     def __init__(self, intensity = 0.0):
         super(Pep, self).__init__()
@@ -44,7 +44,12 @@ class Peptide(Pep):
 
 class FindPep(Pep):
     """ Peptide to be found. Default to simplest ptype; Glycan.
-        Can only of charge-type _single (chType[_single]). """
+        Can only of charge-type _single (chType[_single]).
+        @params: m/z,
+                intensity,
+                tolerance,
+                peptide type,
+                charge type = _single """
 
     def __init__(self, tolerance = 0.0, type = pType[_G]):
         self.tol = tolerance
@@ -78,7 +83,13 @@ class FindPep(Pep):
 
 class FindMcPep(FindPep):
     """ Multi-charged peptide to be found and saved to
-        the 'Potentials' list."""
+        the 'Potentials' list.
+        @params: m/z,
+                intensity,
+                tolerance,
+                peptide type = _M,
+                charge type,
+                parentPeptide. """
 
     def __init__(self, charge = chType[_double], parent = 0.0):
         super(FindMcPep, self).__init__()
