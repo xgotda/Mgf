@@ -38,3 +38,15 @@ Glycans = {
         _NeuAc: 291.0954,
         _NeuGc: 307.0903
         }
+
+
+# Charge types
+_single = 1
+_double = 2
+_triple = 3
+
+chType = {
+        _single: 1/1 + 0.005,
+        _double: 1/2 + 0.005,
+        _triple: 1/3 + 0.005
+    }
