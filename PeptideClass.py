@@ -46,7 +46,7 @@ class Peptide(Pep):
 
 class FindPep(Pep):
     """ Peptide to be found. Default to simplest ptype; Glycan.
-        Can only of charge-type _single (chType[_single]).
+        Can only be of charge-type _single (chType[_single]).
         @params: m/z,
                 intensity,
                 tolerance,
@@ -54,32 +54,32 @@ class FindPep(Pep):
                 charge type = _single """
 
     def __init__(self, m_z = 0.0,
-                 tolerance = 0.0, type = _G):
+                 tolerance = 0.0, ptype = _G):
         super().__init__(m_z)
         self.tol = tolerance
-        self.ptype = type
-        self.chType = sV.chType[sV._single]
+        self.ptype = ptype
+        self._chtype = sV.chType[sV._single]
 
     @property
     def ptype(self):
-        return self.__ptype
+        return self._ptype
 
     @ptype.setter
     def ptype(self, type):
         ''' Defines type of Peptide. Pass in _G or _P. '''
         if type in [_G, _P]:
-            self.__ptype = pType[type]
+            self._ptype = pType[type]
         else:
             print('Illegal peptide type entered: '+str(type) +
                     '. Check that correct object is used. ' + '\n' +
                     'Peptide remains of type \"' + self.ptype + '\".')
 
     @property
-    def chType(type):
-        return self.__mchType
+    def chtype(self):
+        return self._chtype
 
-    @chType.setter
-    def chType(self, notValid):
+    @chtype.setter
+    def chtype(self, notValid):
         ''' FindPep can only be of charge-type _single and
             is not allowed to be changed. '''
         pass
@@ -96,34 +96,35 @@ class FindMcPep(FindPep):
                 parentPeptide. """
 
     def __init__(self, m_z = 0.0, tolerance = 0.0,
-                 charge = sV.chType[sV._double],
+                 chargeType = sV._double,
                  parent = 0.0):
-        super().__init__(m_z, tolerance,)
-        self.ptype = pType[_M]
-        self.chType = charge
+        super().__init__(m_z, tolerance, ptype = _M)
+        self._chtype = sV.chType[chargeType]
         self.parentPep = parent
 
     @property
     def ptype(self):
-        return super(FindMcPep, self).ptype
+        return super().ptype
 
     @ptype.setter
     def ptype(self, type):
         ''' FindMcPep can only be of ptype _M.
             Do not change. '''
-        pass
+        self._ptype = pType[_M]
 
     @property
-    def chType(self):
-        return super(FindMcPep, self).chType
+    def chtype(self):
+        return self._chtype
 
-    @chType.setter
-    def chType(self, chargeType):
+    @chtype.setter
+    def chtype(self, chargeType):
         ''' Set charge type. Doubly or triply charged. '''
         if chargeType in [sV._double, sV._triple]:
-            self.chType = sV.chType[chargeType]
+            self._chtype = sV.chType[chargeType]
         else:
-            print()
+            print('Illegal charge type entered: '+str(chargeType) +
+                    '. Check that correct object is used. ' + '\n' +
+                    'Peptide charge remains \"' + self.chtype + '\".')
 
     def setParentPep(self, parent):
         self.parentPep = parent
