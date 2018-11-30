@@ -11,13 +11,16 @@ from helperMethods import *
 class DoSearch:
     """docstring for DoSearch."""
 
-    def __init__(self, oxos=[], oxo_ppm,
-                 peptides=[], peptide_ppm):
-        self.oxoList = oxos
-        self.oxo_ppm = oxo_ppm
+    def __init__(self, glycans=[], glycan_ppm=0,
+                 peptides=[], peptide_ppm=0):
+        self.oxoList = glycans
+        self.oxo_ppm = glycan_ppm
         self.ppList = peptides
         self.pp_ppm = peptide_ppm
         self.searchList = []
+        self.initGlycans()
+        self.initPeptides()
+        self.initPotentials()
 
     def initGlycans(self):
         for o in self.oxoList:
