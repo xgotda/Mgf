@@ -13,6 +13,7 @@ import staticVariables as sV
         Functions for file and string processing.
     ----------------------------------------------------------- '''
 
+
 def writeToFile(FileName, IonObject):
     ''' Print details from the IonObject to file. '''
     if FileName and IonObject:
@@ -32,6 +33,7 @@ def writeToFile(FileName, IonObject):
     else:
         print('invalid objects')
 
+
 def writeHeaders(FileName):
     ''' Hardcoded headers.
         @return: None
@@ -49,8 +51,10 @@ def writeHeaders(FileName):
     else:
         print('Invalid filename: ' + str(FileName))
 
+
 def stripLine(aline):
     return aline.split('=')[1].strip()
+
 
 def pepLine(aLine):
     ''' Split the string of a fragment into it's m/z
@@ -65,6 +69,7 @@ def pepLine(aLine):
     Functions for mathematical and list processing.
     ----------------------------------------------------------- '''
 
+
 def compare(tofind, value, tolerance):
     ''' Compare whether two values are within
         the given tolerance.
@@ -72,23 +77,34 @@ def compare(tofind, value, tolerance):
         @rtype: boolean '''
     return math.fabs(value - tofind) < tolerance
 
+
+def calcTol(m_z, ppm):
+    ''' Calculate the tolerance for given m_z.
+        @return: tolerance
+        @rtype: float '''
+    pp = 1000000/ppm
+    return m_z/pp
+
+
 def ppm_tolerance(valuesList, ppm):
     ''' Calculate the tolerance for each value in valuesList
         for the given ppm.
         @return: list of values, tolerance pairs
         @rtype: list '''
-    pp = 1000000/ppm
+    # pp = 1000000/ppm
     pairs = []
-    for mz in valuesList:
-        pairs.append([mz, mz/pp])
+    for m_z in valuesList:
+        pairs.append([m_z, calcTol(m_z, ppm)])
     return pairs
+
 
 def chargedMassVar(mz, n):
     ''' Calculating the theoretical n (doubly or triply)
         charged mass variation of passed in m/z value
         @return: n-charged mass
         @rtype: float'''
-    return (mz + (sV._Hplus * (n-1)))/ n
+    return (mz + (sV._Hplus * (n-1))) / n
+
 
 def isChargedVar(curr, pot, n):
     ''' Compares curr(ent) and pot(ential) to see
