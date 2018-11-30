@@ -11,7 +11,7 @@ from PeptideClass import Peptide
 import staticVariables as sV
 
 
-class Ions():
+class Ions:
 
     def __init__(self):
 
@@ -21,7 +21,7 @@ class Ions():
         self.RT = 0
         self.scanNo = 0
         self.pepmass = Peptide()
-        self.Mass = 0
+        self.Mass = 0  # Calculated using pepmass and charge.
         self.fragments = {}  # dictionary
         self.fragmentCount = 0
 
