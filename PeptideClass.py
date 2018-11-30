@@ -13,10 +13,10 @@ _G = 'G'
 _P = 'P'
 _M = 'M'
 
-pType = { _G : 'Glycan',
-          _P : 'Peptide',
-          _M : 'McPeptide'  # Multi-charged peptide
-        }
+pType = {_G: 'Glycan',
+         _P: 'Peptide',
+         _M: 'Multi-charged peptide'
+         }
 #   TODO: fix ptype definitions such that the correct thing
 #       HAS to be entered when setting ptype
 #   _G = 1 and then dict[_G] = 'Glycan'???
@@ -26,7 +26,7 @@ class Pep:
     """ Base object for Glycans and Peptides.
         @params: m/z. """
 
-    def __init__(self, m_z = 0.0):
+    def __init__(self, m_z=0.0):
         self.mz = m_z
 
 
@@ -34,8 +34,8 @@ class Peptide(Pep):
     """ Peptide from the original molecule itself.
         @params: m/z, intensity. """
 
-    def __init__(self, m_z = 0.0, intensity = 0.0):
-        super().__init__(m_z)
+    def __init__(self, m_z=0.0, intensity=0.0):
+        super().__init__(m_z=m_z)
         self.intensity = intensity
 
     def frLine(self, theLine):
@@ -47,14 +47,13 @@ class Peptide(Pep):
 class FindPep(Pep):
     """ Peptide to be found. Default to simplest ptype; Glycan.
         Can only be of charge-type _single (chType[_single]).
-        @params: m/z,
-                intensity,
+        @params: m_z,
                 tolerance,
                 peptide type,
                 charge type = _single """
 
-    def __init__(self, m_z = 0.0,
-                 tolerance = 0.0, ptype = _G):
+    def __init__(self, m_z=0.0,
+                 tolerance=0.0, ptype=_G):
         super().__init__(m_z)
         self.tol = tolerance
         self.ptype = ptype
@@ -71,8 +70,8 @@ class FindPep(Pep):
             self._ptype = pType[type]
         else:
             print('Illegal peptide type entered: '+str(type) +
-                    '. Check that correct object is used. ' + '\n' +
-                    'Peptide remains of type \"' + self.ptype + '\".')
+                  '. Check that correct object is used. ' + '\n' +
+                  'Peptide remains of type \"' + self.ptype + '\".')
 
     @property
     def chtype(self):
@@ -95,10 +94,10 @@ class FindMcPep(FindPep):
                 charge type,
                 parentPeptide. """
 
-    def __init__(self, m_z = 0.0, tolerance = 0.0,
-                 chargeType = sV._double,
-                 parent = 0.0):
-        super().__init__(m_z, tolerance, ptype = _M)
+    def __init__(self, m_z=0.0, tolerance=0.0,
+                 chargeType=sV._double,
+                 parent=0.0):
+        super().__init__(m_z, tolerance, ptype=_M)
         self._chtype = sV.chType[chargeType]
         self.parentPep = parent
 
@@ -123,8 +122,8 @@ class FindMcPep(FindPep):
             self._chtype = sV.chType[chargeType]
         else:
             print('Illegal charge type entered: '+str(chargeType) +
-                    '. Check that correct object is used. ' + '\n' +
-                    'Peptide charge remains \"' + self.chtype + '\".')
+                  '. Check that correct object is used. ' + '\n' +
+                  'Peptide charge remains \"' + str(self.chtype) + '\".')
 
     def setParentPep(self, parent):
         self.parentPep = parent

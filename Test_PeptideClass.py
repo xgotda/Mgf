@@ -2,6 +2,7 @@ import unittest
 import PeptideClass as pC
 import staticVariables as sV
 
+
 class TestPeptides(unittest.TestCase):
 
     def setUp(self):
@@ -26,7 +27,7 @@ class TestPeptides(unittest.TestCase):
                          'incorrect intensity for Peptide')
 
     def test_initPep(self):
-        self.pepm = pC.Pep(m_z = self.m)
+        self.pepm = pC.Pep(m_z=self.m)
         self.assertEqual(self.pepm.mz, self.m, 'Pep incorrect initialised')
 
     def test_initPeptide(self):
@@ -37,7 +38,8 @@ class TestPeptides(unittest.TestCase):
         self.pep.mz = mzVal
         self.peptide.mz = mzVal
         self.assertEqual(self.pep.mz, mzVal, 'wrong after setting for Pep')
-        self.assertEqual(self.peptide.mz, mzVal, 'wrong after setting for Peptide')
+        self.assertEqual(self.peptide.mz, mzVal,
+                         'wrong after setting for Peptide')
 
     def test_setIntensityPeps(self):
         intensityVal = 12.999
@@ -84,17 +86,17 @@ class TestFindPep(unittest.TestCase):
                          'incorrect chtype for FindMcPep')
 
     def test_initFindPep(self):
-        self.fpep = pC.FindPep(m_z = self.m, tolerance = self.t, ptype = pC._P)
+        self.fpep = pC.FindPep(m_z=self.m, tolerance=self.t, ptype=pC._P)
         self.assertEqual(self.fpep.mz, self.m, 'incorrect mz for FindPep')
         self.assertEqual(self.fpep.tol, self.t, 'incorrect mz for FindPep')
-        self.assertEqual(self.fpep.ptype, pC.pType[pC._P], 'incorrect ptype for FindPep')
+        self.assertEqual(self.fpep.ptype, pC.pType[pC._P],
+                         'incorrect ptype for FindPep')
         self.assertEqual(self.fpep.chtype, sV.chType[sV._single],
                          'incorrect chtype for FindPep')
 
-
     def test_initFindMcPep(self):
-        self.fMcP = pC.FindMcPep(m_z = self.m, tolerance =self.t,
-                              chargeType = sV._triple)
+        self.fMcP = pC.FindMcPep(m_z=self.m, tolerance=self.t,
+                                 chargeType=sV._triple)
         self.assertEqual(self.fMcP.mz, self.m, 'incorrect mz for FindMcPep')
         self.assertEqual(self.fMcP.tol, self.t, 'incorrect tol for FindMcPep')
         self.assertEqual(self.fMcP.ptype, pC.pType[pC._M],
@@ -112,12 +114,14 @@ def suiteIsPep():
     suite.addTest(TestPeptides('test_frLine'))
     return suite
 
+
 def suiteIsFindPeps():
     suite = unittest.TestSuite()
     suite.addTest(TestFindPep('test_defaultInitsFindPeps'))
     suite.addTest(TestFindPep('test_initFindPep'))
     suite.addTest(TestFindPep('test_initFindMcPep'))
     return suite
+
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

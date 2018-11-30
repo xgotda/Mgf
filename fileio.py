@@ -8,7 +8,7 @@ Created on Wed Oct 10 12:06:52 2018
 
 from IonClass import Ions
 from helperMethods import *
-#import staticVariables as sV
+# import staticVariables as sV
 
 
 #  Variables
@@ -88,6 +88,7 @@ def ProcessMgf():
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))
     print('Added: ' + str(i))
+
 
 # main - call methods to be executed
 ProcessMgf()
