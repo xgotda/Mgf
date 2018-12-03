@@ -1,7 +1,8 @@
 import unittest
 import SearchClass as sc
-import helperMethods as h
 import PeptideClass as pc
+import IonClass as ic
+import helperMethods as h
 import staticVariables as sV
 
 
@@ -24,6 +25,7 @@ for f in _findPP:
         cm.append(h.chargedMassVar(f, n))
 cm_tolPairs = h.ppm_tolerance(cm, _pp_ppm)
 
+
 class TestDoSearch(unittest.TestCase):
 
     def setUp(self):
@@ -31,11 +33,9 @@ class TestDoSearch(unittest.TestCase):
         self.ds = sc.DoSearch(glycans=_findOxo, glycan_ppm=_oxo_ppm,
                               peptides=_findPP, peptide_ppm=_pp_ppm)
 
-
     def tearDown(self):
         del self.dds
         del self.ds
-
 
     def test_defaultInitSearch(self):
         self.assertEqual(self.dds.oxoList, [],
@@ -47,7 +47,6 @@ class TestDoSearch(unittest.TestCase):
         self.assertEqual(self.dds.pp_ppm, 0,
                          'default oxoList not empty')
 
-
     def test_initSearch(self):
         self.assertEqual(self.ds.oxoList, _findOxo,
                          'oxoList not initialised correctly with given values')
@@ -58,13 +57,11 @@ class TestDoSearch(unittest.TestCase):
         self.assertEqual(self.ds.pp_ppm, _pp_ppm,
                          'pp_ppm not initialised correctly with given values')
 
-
     def test_numberSearchList(self):
         numberOfValues = (_lenOxo + _lenPP
-                             + (_lenPP *2))  # doubly and triply charged for _findPP
+                          + (_lenPP * 2))  # 2ly & 3ly charged for _findPP
         self.assertEqual(len(self.ds.searchList), numberOfValues,
                          'wrong number of values in searchList')
-
 
     def test_initGlycans(self):
         for i in range(_lenOxo):
@@ -73,12 +70,8 @@ class TestDoSearch(unittest.TestCase):
                              'Wrong ptype for Glycan')
             self.assertEqual(dsi.chtype, sV.chType[sV._single],
                              'Wrong charge type for Glycan')
-
-            m = dsi.mz
-            t = dsi.tol
-            self.assertEqual([m, t], _oxo_tolPairs[i],
+            self.assertEqual([dsi.mz, dsi.tol], _oxo_tolPairs[i],
                              'incorrect Glycans in searchList.')
-
 
     def test_initPeptides(self):
         for i in range(_lenOxo, _lenPP):
@@ -87,24 +80,34 @@ class TestDoSearch(unittest.TestCase):
             self.assertEqual(dsi.ptype, pc.pType[pc._P],
                              'Wrong ptype for Glycan')
             self.assertEqual(dsi.chtype, sV.chType[sV._single],
-                             'Wrong charge type for Glycan')
-            m = dsi.mz
-            t = dsi.tol
-            self.assertEqual([m, t], _pp_tolPairs[a],
+                             'Wrong charge type for Peptide')
+            self.assertEqual([dsi.mz, dsi.tol], _pp_tolPairs[a],
                              'incorrect Peptides in searchList.')
 
     def test_initPotentials(self):
         for i in range(_lenPP, _lenPP*2):
             a = i-_lenOxo
-
             dsi = self.ds.searchList[_lenPP+i]
             self.assertEqual(dsi.ptype, pc.pType[pc._M],
                              'Wrong ptype for Multi-charged')
-            m = dsi.mz
-            t = dsi.tol
-
-            self.assertEqual([m, t], cm_tolPairs,
+            self.assertNotEqual(dsi.chtype, sV.chType[sV._single],
+                                'Wrong charge type for Multi-charged')
+            if i % 2:
+                self.assertEqual(dsi.chtype, sV.chType[sV._double],
+                                 'Multi-charged not doubly charged')
+            else:
+                self.assertEqual(dsi.chtype, sV.chType[sV._triple],
+                                 'Multi-charged not triply charged')
+            self.assertEqual([dsi.mz, dsi.tol], cm_tolPairs[a],
                              'incorrect Potentials in searchList.')
+
+    def test_search(self):
+        ion = ic.Ions()
+        self.ds.search([_findOxo[0], 1234], ion)
+        # self.as
+        self.assertIn(_findOxo[0], list(ion.fragments.keys()),
+                      'fragment not added to fragment list.')
+
 
 def suiteIsDoSearch():
     suite = unittest.TestSuite()
@@ -114,6 +117,7 @@ def suiteIsDoSearch():
     suite.addTest(TestDoSearch('test_initGlycans'))
     suite.addTest(TestDoSearch('test_initPeptides'))
     suite.addTest(TestDoSearch('test_initPotentials'))
+    suite.addTest(TestDoSearch('test_search'))
     return suite
 
 
