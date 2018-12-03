@@ -9,13 +9,13 @@ import staticVariables as sV
 
 
 # Definitions of types
-_G = 'G'
-_P = 'P'
-_M = 'M'
+_G = 'Glycan'
+_P = 'Peptide'
+_M = 'Multi-charged peptide'
 
-pType = {_G: 'Glycan',
-         _P: 'Peptide',
-         _M: 'Multi-charged peptide'
+pType = {_G: _G,
+         _P: _P,
+         _M: _M
          }
 #   TODO: fix ptype definitions such that the correct thing
 #       HAS to be entered when setting ptype
