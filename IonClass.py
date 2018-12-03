@@ -24,6 +24,7 @@ class Ions:
         self.Mass = 0  # Calculated using pepmass and charge.
         self.fragments = {}  # dictionary
         self.fragmentCount = 0
+  # TODO: Get rid of fragmentCount. Use len(list(dict.items()))
 
     def calculateMass(self):
         ''' calculate the mass of the peptide
@@ -35,8 +36,8 @@ class Ions:
     def addFragment(self, key, vals):
         ''' adds the intensity value for the given key
             to the fragments dictionary.
-            @return: fragments dictionary with new value added
-            @rtype: float '''
+            @return: amends fragments dictionary with new value added
+            @rtype: dictionary '''
         intensity = vals[1]  # keep only intensity
         if self.fragments.get(key, False):
             self.fragments[key].append(intensity)
