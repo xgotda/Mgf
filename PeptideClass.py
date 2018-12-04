@@ -88,7 +88,6 @@ class FindMcPep(FindPep):
     """ Multi-charged peptide to be found and saved to
         the 'Potentials' list.
         @params: m/z,
-                intensity,
                 tolerance,
                 peptide type = _M,
                 charge type,
