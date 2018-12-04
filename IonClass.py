@@ -30,8 +30,8 @@ class Ions:
         ''' calculate the mass of the peptide
             @return: Mass of original peptide
             @rtype: float '''
-        self.Mass = float(self.charge * (self.pepmass.mz - sV._Hplus))
-        return self.Mass
+        mass = self.charge * (self.pepmass.mz - sV._Hplus)
+        self.Mass = float("{0:.4}".format(mass))
 
     def addFragment(self, key, vals):
         ''' adds the intensity value for the given key
@@ -46,3 +46,4 @@ class Ions:
             after isotope check!! '''
             self.fragments[key] = [intensity]
         self.fragmentCount += 1
+        self.valid = True
