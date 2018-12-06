@@ -24,8 +24,7 @@ class DoSearch:
 
     def initGlycans(self):
         for o in self.oxoList:
-            aGlycan = pc.FindPep(m_z=o,
-                                 tolerance=calcTol(o, self.oxo_ppm))
+            aGlycan = pc.FindPep(o, calcTol(o, self.oxo_ppm))
             self.searchList.append(aGlycan)
 
     def initPeptides(self):
@@ -51,10 +50,10 @@ class DoSearch:
             if s.ptype == pc._G:
                 if compare(s.mz, curr_mz, s.tol):
                     ion.addFragment(s.mz, currVals)
-                    ion.calculateMass()
-                    return ion
                     break
             elif s.ptype == pc._P:
-                pass
+                if compare(s.mz, curr_mz, s.tol):
+                    ion.addFragment(s.mz, currVals)
+                break
             else:
                 pass
