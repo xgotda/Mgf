@@ -17,16 +17,17 @@ import staticVariables as sV
 def writeToFile(FileName, IonObject):
     ''' Print details from the IonObject to file. '''
     if FileName and IonObject:
+        deci = "{0:.4f}"  # number of decimal points
         info = (IonObject.scanNo + '\t'
-                + str(IonObject.pepmass.mz) + '\t'
+                + deci.format(IonObject.pepmass.mz) + '\t'
                 + str(IonObject.charge) + '\t'
-                + str(IonObject.Mass) + '\t'
+                + deci.format(IonObject.Mass) + '\t'
                 + IonObject.RT + '\t'
                 + str(max(IonObject.fragments.values())) + '\t'
                 + str(IonObject.fragmentCount)
                 )
         info = info + '\t' + str(list(IonObject.fragments.items()))
-
+# 
 #        for k in IonObject.fragments:
 #            info = info + '\t '+ str([k, IonObject.fragments[k]])
         FileName.write(info + '\n')
