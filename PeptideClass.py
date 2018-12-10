@@ -54,6 +54,8 @@ class FindPep(Pep):
 
     def __init__(self, m_z=0.0,
                  tolerance=0.0, ptype=_G):
+        ''' If complains about super() --> 
+        super(FindPep, self) b/c python 3 vs python 2. '''
         super().__init__(m_z)
         self.tol = tolerance
         self.ptype = ptype
@@ -93,12 +95,12 @@ class FindMcPep(FindPep):
                 charge type,
                 parentPeptide. """
 
-    def __init__(self, m_z=0.0, tolerance=0.0,
-                 chargeType=sV._double,
-                 parent=0.0):
-        super().__init__(m_z, tolerance, ptype=_M)
+    def __init__(self, theParent, m_z=0.0, tolerance=0.0,
+                 chargeType=sV._double
+                 ):
+        super().__init__(m_z, tolerance, _M)
         self._chtype = sV.chType[chargeType]
-        self.parentPep = parent
+        self.parentPep = theParent
 
     @property
     def ptype(self):
@@ -124,5 +126,5 @@ class FindMcPep(FindPep):
                   '. Check that correct object is used. ' + '\n' +
                   'Peptide charge remains \"' + str(self.chtype) + '\".')
 
-    def setParentPep(self, parent):
-        self.parentPep = parent
+#    def setParentPep(self, parent):
+#        self.parentPep = parent
