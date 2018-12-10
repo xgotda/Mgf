@@ -34,7 +34,6 @@ def writeToFile(FileName, IonObject):
     else:
         print('invalid objects')
 
-
 def writeHeaders(FileName):
     ''' Hardcoded headers.
         @return: None
@@ -52,10 +51,8 @@ def writeHeaders(FileName):
     else:
         print('Invalid filename: ' + str(FileName))
 
-
 def stripLine(aline):
     return aline.split('=')[1].strip()
-
 
 def pepLine(aLine):
     ''' Split the string of a fragment into it's m/z
@@ -64,6 +61,21 @@ def pepLine(aLine):
         @rtype: list '''
     aLine = aLine.split(' ')
     return [float(aLine[0]), float(aLine[1])]
+
+def readXlines(afile, x):
+    ''' Reads x lines ahead in the file but then
+        resets the file read position to the initial one.
+        @return: The line x lines down from current position.
+        @rtype: string '''
+    lineX = ''
+    try:
+        orgiginalPos = afile.tell()
+        for i in range(x):
+            lineX = afile.readline()
+        afile.seek(orgiginalPos)
+    except:
+        print(str(afile) + ' is not a file.')
+    return lineX
 
 
 ''' -----------------------------------------------------------
@@ -78,14 +90,12 @@ def compare(tofind, value, tolerance):
         @rtype: boolean '''
     return math.fabs(value - tofind) < tolerance
 
-
 def calcTol(m_z, ppm):
     ''' Calculate the tolerance for given m_z.
         @return: tolerance
         @rtype: float '''
     pp = 1000000/ppm
     return m_z/pp
-
 
 def ppm_tolerance(valuesList, ppm):
     ''' Calculate the tolerance for each value in valuesList
@@ -98,39 +108,20 @@ def ppm_tolerance(valuesList, ppm):
         pairs.append([m_z, calcTol(m_z, ppm)])
     return pairs
 
-
 def chargedMassVar(mz, n):
-    ''' Calculating the theoretical n (doubly or triply)
-        charged mass variation of passed in m/z value
+    ''' Calculating the theoretical n-charged (doubly or triply)
+        mass variation of passed in m/z value
         @return: n-charged mass
         @rtype: float'''
     return (mz + (sV._Hplus * (n-1))) / n
 
-
 def isChargedVar(curr, pot, n):
     ''' Compares curr(ent) and pot(ential) to see
-        if pot is the n charged mass variation of curr.
+        if pot is the n-charged mass variation of curr.
         @return: true if pot is a variation of curr
         of charge n.
         @rtype: boolean '''
         # curr + 0.5 +- tolerance
-        # 1/1 = chtuype1, 1/2 = chType2 etc
-    return curr + sV.chType[n] < pot < curr + sV.chType[n]
 
+    return math.fabs(pot-curr-sV.chType[n]) < sV._variance
 
-def isoExists(file, val):
-    ''' Checks if the next line in the file is
-        an isotope of valself.
-        @return: The intensity of the isotope if found and
-                zero if no isotope is found.
-        @rtype: float '''
-    currPos = file.tell()
-    nextLine = file.readline()
-    file.seek(currPos)
-    nextVals = pepLine(nextLine)
-
-    # if isChargedVar(val, nextVals[0], type)
-    if (val + 0.99 < nextVals[0] < val + 1.003):
-        return nextVals[1]
-    else:
-        return 0
