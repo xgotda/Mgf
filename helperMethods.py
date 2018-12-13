@@ -62,20 +62,26 @@ def pepLine(aLine):
     aLine = aLine.split(' ')
     return [float(aLine[0]), float(aLine[1])]
 
-def readXlines(afile, x):
+def readXlines(afile, x, list=False):
     ''' Reads x lines ahead in the file but then
         resets the file read position to the initial one.
         @return: The line x lines down from current position.
         @rtype: string '''
     lineX = ''
+    xLines = []
     try:
         orgiginalPos = afile.tell()
         for i in range(x):
             lineX = afile.readline()
+            xLines.append(lineX.strip())
         afile.seek(orgiginalPos)
     except:
         print(str(afile) + ' is not a file.')
-    return lineX
+    
+    if list:
+        return xLines
+    else:
+        return lineX
 
 
 ''' -----------------------------------------------------------
@@ -122,6 +128,6 @@ def isChargedVar(curr, pot, n):
         of charge n.
         @rtype: boolean '''
         # curr + 0.5 +- tolerance
-
-    return math.fabs(pot-curr-sV.chType[n]) < sV._variance
+    temp = math.fabs(pot-curr)
+    return math.fabs(temp-sV.chType[n]) < sV._variance
 
