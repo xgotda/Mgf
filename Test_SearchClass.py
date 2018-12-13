@@ -30,8 +30,8 @@ class TestDoSearch(unittest.TestCase):
 
     def setUp(self):
         self.dds = sc.DoSearch()
-        self.ds = sc.DoSearch(glycans=_findOxo, glycan_ppm=_oxo_ppm,
-                              peptides=_findPP, peptide_ppm=_pp_ppm)
+        self.ds = sc.DoSearch(_findOxo, _oxo_ppm,
+                              _findPP, _pp_ppm)
 
     def tearDown(self):
         del self.dds
@@ -90,13 +90,13 @@ class TestDoSearch(unittest.TestCase):
             dsi = self.ds.searchList[_lenPP+i]
             self.assertEqual(dsi.ptype, pc.pType[pc._M],
                              'Wrong ptype for Multi-charged')
-            self.assertNotEqual(dsi.chtype, sV.chType[sV._single],
+            self.assertNotEqual(dsi.chtype, sV._single,
                                 'Wrong charge type for Multi-charged')
             if i % 2:
-                self.assertEqual(dsi.chtype, sV.chType[sV._double],
+                self.assertEqual(dsi.chtype, sV._double,
                                  'Multi-charged not doubly charged')
             else:
-                self.assertEqual(dsi.chtype, sV.chType[sV._triple],
+                self.assertEqual(dsi.chtype, sV._triple,
                                  'Multi-charged not triply charged')
             self.assertEqual([dsi.mz, dsi.tol], cm_tolPairs[a],
                              'incorrect Potentials in searchList.')
@@ -104,9 +104,11 @@ class TestDoSearch(unittest.TestCase):
     def test_search(self):
         ion = ic.Ions()
         self.ds.search([_findOxo[0], 1234], ion)
-        # self.as
+        self.ds.search([_findOxo[2], 3333], ion)
+        print(str(ion.fragments))
         self.assertIn(_findOxo[0], list(ion.fragments.keys()),
                       'fragment not added to fragment list.')
+        del ion
 
 
 def suiteIsDoSearch():
