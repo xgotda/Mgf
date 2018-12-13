@@ -44,9 +44,10 @@ Glycans = {
 _single = 1
 _double = 2
 _triple = 3
+_variance = 0.01    #+- 0.01
 
 chType = {
-        _single: 1/1 + 0.005,
-        _double: 1/2 + 0.005,
-        _triple: 1/3 + 0.005
+        _single: 1/_single,
+        _double: 1/_double,
+        _triple: 1/_triple
     }
