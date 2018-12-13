@@ -59,7 +59,7 @@ class FindPep(Pep):
         super().__init__(m_z)
         self.tol = tolerance
         self.ptype = ptype
-        self._chtype = sV.chType[sV._single]
+        self._chtype = sV._single
 
     @property
     def ptype(self):
@@ -99,7 +99,7 @@ class FindMcPep(FindPep):
                  chargeType=sV._double
                  ):
         super().__init__(m_z, tolerance, _M)
-        self._chtype = sV.chType[chargeType]
+        self.chtype = chargeType
         self.parentPep = theParent
 
     @property
@@ -120,7 +120,7 @@ class FindMcPep(FindPep):
     def chtype(self, chargeType):
         ''' Set charge type. Doubly or triply charged. '''
         if chargeType in [sV._double, sV._triple]:
-            self._chtype = sV.chType[chargeType]
+            self._chtype = chargeType
         else:
             print('Illegal charge type entered: '+str(chargeType) +
                   '. Check that correct object is used. ' + '\n' +
