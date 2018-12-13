@@ -68,7 +68,7 @@ class TestPeptides(unittest.TestCase):
 class TestFindPep(unittest.TestCase):
     def setUp(self):
         self.fpep = pC.FindPep()
-        self.fMcP = pC.FindMcPep()
+        self.fMcP = pC.FindMcPep(1990)
 
 
     def tearDown(self):
@@ -87,26 +87,27 @@ class TestFindPep(unittest.TestCase):
         self.assertEqual(self.fMcP.tol, _z, 'incorrect tol for FindMcPep')
         self.assertEqual(self.fMcP.ptype, pC.pType[pC._M],
                          'incorrect ptype for FindMcPep')
-        self.assertEqual(self.fMcP.chtype, sV.chType[sV._double],
+        self.assertEqual(self.fMcP.chtype, sV._double,
                          'incorrect chtype for FindMcPep')
 
     def test_initFindPep(self):
-        self.fpep = pC.FindPep(m_z=_m, tolerance=_t, ptype=pC._P)
+        self.fpep = pC.FindPep(_m, _t, pC._P)
         self.assertEqual(self.fpep.mz, _m, 'incorrect mz for FindPep')
         self.assertEqual(self.fpep.tol, _t, 'incorrect mz for FindPep')
         self.assertEqual(self.fpep.ptype, pC.pType[pC._P],
                          'incorrect ptype for FindPep')
-        self.assertEqual(self.fpep.chtype, sV.chType[sV._single],
+        self.assertEqual(self.fpep.chtype, sV._single,
                          'incorrect chtype for FindPep')
 
     def test_initFindMcPep(self):
-        self.fMcP = pC.FindMcPep(m_z=_m, tolerance=_t,
-                                 chargeType=sV._triple)
+        parent = 1990
+        self.fMcP = pC.FindMcPep(parent, _m, _t,
+                                 sV._triple)
         self.assertEqual(self.fMcP.mz, _m, 'incorrect mz for FindMcPep')
         self.assertEqual(self.fMcP.tol, _t, 'incorrect tol for FindMcPep')
         self.assertEqual(self.fMcP.ptype, pC.pType[pC._M],
                          'incorrect ptype for FindMcPep')
-        self.assertEqual(self.fMcP.chtype, sV.chType[sV._triple],
+        self.assertEqual(self.fMcP.chtype, sV._triple,
                          'incorrect chtype for FindMcPep')
 
 
