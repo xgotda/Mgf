@@ -8,50 +8,39 @@ Created on Wed Oct 10 12:06:52 2018
 
 from IonClass import Ions
 from helperMethods import *
-# import staticVariables as sV
+from SearchClass import DoSearch
 
 
-#  Variables
-fileRead = 'mgfFiles/small.mgf'
-# 'smallProb.mgf'
-# 'QEHF_180716_15.mgf'
+# --- VARIABLES ---
+#fileRead = 'mgfFiles/small.mgf'
+fileRead = 'mgfFiles/QEHF_180716_15.mgf'
 # 'small.mgf'
+# 'smallProb.mgf'
 fileWrite = 'sec.txt'
 
 #  oxo = oxonium (glycan)
 oxo_ppm = 5
 findOxo = [204.08667, 274.0921, 366.1395]
-oxo_tolPairs = ppm_tolerance(findOxo, oxo_ppm)
 
-#  pp = peptide (larger fragment)
+# #  pp = peptide (larger fragment)
 pp_ppm = 5
 findPP = [1786.9487, 1990.0281, 2136.086]
-pp_tolPairs = ppm_tolerance(findPP, pp_ppm)
 
-# cm = (doubly or triply ) charged mass
-cm = []
-for f in findPP:
-    for n in range(2, 4):
-        cm.append(chargedMassVar(f, n))
 
-cm_tolPairs = ppm_tolerance(cm, pp_ppm)
-
-mz_tolPairs = cm_tolPairs.copy()
-mz_tolPairs.extend(pp_tolPairs)
-print(str(oxo_tolPairs))
-print(str(pp_tolPairs))
-print(mz_tolPairs)
-
+aSearch = DoSearch(findOxo, oxo_ppm, findPP, pp_ppm)
 
 def ProcessMgf():
     linesRead = 0
-    i = 0
+    addedIon = 0
     records = 0
+    toPrint = []
 
     with open(fileRead, 'r') as rf:
         with open(fileWrite, 'w') as wf:
-            writeHeaders(wf)
-            for line in rf:
+            aSearch.file = rf
+            line = 'start'
+            while line:
+                line = rf.readline()
                 linesRead += 1
                 if 'BEGIN' in line:
                     records += 1
@@ -70,24 +59,23 @@ def ProcessMgf():
                             elif 'SCANS' in line:
                                 newIon.scanNo = stripLine(line)
                         else:
-                            tempVals = pepLine(line)
-                            for mz, tolerance in oxo_tolPairs:
-                                if compare(mz, tempVals[0], tolerance):
-                                    newIon.addFragment(mz, tempVals)
-                                    newIon.valid = True
+#                            tempVals = pepLine(line)
+ #                           aSearch.search(tempVals, newIon)
+                            aSearch.search(pepLine(line), newIon)
                         line = rf.readline()
 
                     if newIon.valid:
-                        i += 1
+                        addedIon += 1
                         newIon.calculateMass()
-                        writeToFile(wf, newIon)
+                        toPrint.append(newIon)
                     del newIon
-        wf.close()
-    rf.close()
+            writeHeaders(wf)
+            for ion in toPrint:
+                writeToFile(wf, ion)
 
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))
-    print('Added: ' + str(i))
+    print('Added: ' + str(addedIon))
 
 
 # main - call methods to be executed
