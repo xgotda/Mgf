@@ -13,14 +13,17 @@ class DoSearch:
 
     def __init__(self, glycans=[], glycan_ppm=0,
                  peptides=[], peptide_ppm=0):
-        self.oxoList = glycans # glycans.sort()
+        glycans.sort()
+        peptides.sort()
+        self.oxoList = glycans
         self.oxo_ppm = glycan_ppm
-        self.ppList = peptides # peptides.sort()
+        self.ppList = peptides
         self.pp_ppm = peptide_ppm
         self.searchList = []
         self.initGlycans()
         self.initPeptides()
         self.initPotentials()
+
 
     def initGlycans(self):
         for o in self.oxoList:
@@ -41,38 +44,49 @@ class DoSearch:
 
     def search(self, currVals, ion):
         ''' Adds currVals to fragments dict if equal '''
-        curr_mz = currVals[0]
+        [curr_mz, curr_itsy] = currVals
+
         for s in self.searchList:
             if s.ptype == pc._G:
                 if compare(s.mz, curr_mz, s.tol):
-                    ion.addFragment(s.mz, currVals)
+                    ion.addFragment(s.mz, curr_itsy, s.chtype)
                     break
             elif s.ptype == pc._P:
                 if compare(s.mz, curr_mz, s.tol):
-                    if self.file:  # TODO: Better error handling here
-                        isoIntensity = self.isoExists(curr_mz, s)
-                        if isoIntensity:
-                        # if the first iso exists, check for second and save max
-                            isoIntensity_2 = self.isoExists(curr_mz+1, s, 2)
-                            currVals[1] = max(currVals[1],
-                                              isoIntensity, isoIntensity_2)
-                    ion.addFragment(s.mz, currVals)
-                    # Check for potentials!
+                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))    
+                    ion.addFragment(s.mz, curr_itsy, s.chtype)
                     break
             elif s.ptype == pc._M:
-                # if compare(s.mz, curr_mz, s.tol):
-                #     if self.file:  # TODO: Better error handling here
-                #         isoIntensity = self.isoExists(curr_mz, s)
-                #         if isoIntensity:
-                #         # if the first iso exists, check for second and save max
-                #             isoIntensity_2 = self.isoExists(curr_mz, s, 2)
-                #             currVals[1] = max(currVals[1],
-                #                               isoIntensity, isoIntensity_2)
-                #     #ion.addFragment(s.mz, currVals)
-                #     break
-                pass
+                if compare(s.mz, curr_mz, s.tol):
+                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
+                    ion.addFragment(s.parentPep, curr_itsy, s.chtype)
+                    break
 
-    def isoExists(self, mz, searchP, depth=1):
+    def isoLine(self, aLine, mz, chtype):
+        ''' Intensity of the line if it is its isotope.
+            @return: intensity or zero
+            @rtype: float '''
+        returnIntensity = 0
+        if 'END' not in aLine and  aLine.strip() != '':
+            nextVals = pepLine(aLine)
+            if isChargedVar(mz, nextVals[0], chtype):
+                returnIntensity = nextVals[1]
+        return returnIntensity
+
+
+    def isoExists(self, mz, chtype):
+        ''' @return: The intensity of the isotope if found and
+                    zero if no isotope is found.
+            @rtype: float '''
+        toReturn = 0
+        if self.file:  # TODO: Better error handling here
+            nextLines = readXlines(self.file, 2, True)
+            toReturn = max(self.isoLine(nextLines[0], mz, chtype),
+                           self.isoLine(nextLines[1], mz, chtype))
+        return toReturn
+
+
+    def isoOldExists(self, mz, searchP, depth=1):
         ''' Checks if the n'th line (depth) in the file is
             an isotope of mz. Uses searchP (a Peptide object)
             for charge type (chtype).
