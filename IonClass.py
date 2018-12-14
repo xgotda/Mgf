@@ -22,27 +22,25 @@ class Ions:
         self.scanNo = 0
         self.pepmass = Peptide()
         self.Mass = 0  # Calculated using pepmass and charge.
-        self.fragments = {}  # dictionary
+        self.fragments = {}
         self.fragmentCount = 0
-  # TODO: Get rid of fragmentCount. Use len(list(dict.items()))
 
     def calculateMass(self):
-        ''' calculate the mass of the peptide
+        ''' Calculate the mass of the peptide
             @return: Mass of original peptide
             @rtype: float '''
         self.Mass = self.charge * (self.pepmass.mz - sV._Hplus)
 
-    def addFragment(self, key, vals):
-        ''' adds the intensity value for the given key
+    #def addFragment(self, key, intensity, chtype):
+    def addFragment(self, key, intensity, slItem):
+        ''' Adds the intensity value for the given key
             to the fragments dictionary.
             @return: amends fragments dictionary with new value added
             @rtype: dictionary '''
-        intensity = vals[1]  # keep only intensity
         if self.fragments.get(key, False):
-            self.fragments[key].append(intensity)
-        else:
-            ''' Only these two lines are relevant
-            after isotope check!! '''
-            self.fragments[key] = [intensity]
+            self.fragments[key][slItem.chtype] = intensity
+        else: 
+            self.fragments[key] = { 0 : slItem.ptype,
+                                    slItem.chtype : intensity}
         self.fragmentCount += 1
         self.valid = True

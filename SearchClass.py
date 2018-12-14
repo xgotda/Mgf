@@ -49,17 +49,17 @@ class DoSearch:
         for s in self.searchList:
             if s.ptype == pc._G:
                 if compare(s.mz, curr_mz, s.tol):
-                    ion.addFragment(s.mz, curr_itsy, s.chtype)
+                    ion.addFragment(s.mz, curr_itsy, s)
                     break
             elif s.ptype == pc._P:
                 if compare(s.mz, curr_mz, s.tol):
                     curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))    
-                    ion.addFragment(s.mz, curr_itsy, s.chtype)
+                    ion.addFragment(s.mz, curr_itsy, s)
                     break
             elif s.ptype == pc._M:
                 if compare(s.mz, curr_mz, s.tol):
                     curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
-                    ion.addFragment(s.parentPep, curr_itsy, s.chtype)
+                    ion.addFragment(s.parentPep, curr_itsy, s)
                     break
 
     def isoLine(self, aLine, mz, chtype):
