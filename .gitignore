@@ -2,8 +2,7 @@ __py*
 /.ipynb_*
 ipython.html
 *.mgf
-/.vscode
-*.txt
 builds/
 engine/
 gui/
+temp/
