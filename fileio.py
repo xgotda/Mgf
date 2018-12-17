@@ -16,7 +16,7 @@ from SearchClass import DoSearch
 fileRead = 'mgfFiles/QEHF_180716_15.mgf'
 # 'small.mgf'
 # 'smallProb.mgf'
-fileWrite = 'sec.txt'
+fileWrite = 'temp/sec.txt'
 
 #  oxo = oxonium (glycan)
 oxo_ppm = 5
@@ -59,8 +59,6 @@ def ProcessMgf():
                             elif 'SCANS' in line:
                                 newIon.scanNo = stripLine(line)
                         else:
-#                            tempVals = pepLine(line)
- #                           aSearch.search(tempVals, newIon)
                             aSearch.search(pepLine(line), newIon)
                         line = rf.readline()
 
@@ -69,9 +67,9 @@ def ProcessMgf():
                         newIon.calculateMass()
                         toPrint.append(newIon)
                     del newIon
-            writeHeaders(wf)
+            writeHeaders(wf, aSearch)
             for ion in toPrint:
-                writeToFile(wf, ion)
+                writeToFile(wf, ion, aSearch)
 
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))

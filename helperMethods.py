@@ -7,14 +7,14 @@ Created on Wed Oct 24 10:51:30 2018
 """
 import math
 import staticVariables as sV
+import PeptideClass as p
 
 
 ''' -----------------------------------------------------------
         Functions for file and string processing.
     ----------------------------------------------------------- '''
 
-
-def writeToFile(FileName, IonObject):
+def writeToFile(FileName, IonObject, theSearch):
     ''' Print details from the IonObject to file. '''
     if FileName and IonObject:
         deci = "{0:.4f}"  # number of decimal points
@@ -23,18 +23,34 @@ def writeToFile(FileName, IonObject):
                 + str(IonObject.charge) + '\t'
                 + deci.format(IonObject.Mass) + '\t'
                 + IonObject.RT + '\t'
-                + str(max(IonObject.fragments.values())) + '\t'
+#                + str(max(IonObject.fragments.values())) + '\t'
+                + 'maxInts' + '\t'
                 + str(IonObject.fragmentCount)
                 )
-        info = info + '\t' + str(list(IonObject.fragments.items()))
-# 
-#        for k in IonObject.fragments:
-#            info = info + '\t '+ str([k, IonObject.fragments[k]])
+
+        fList = IonObject.fragments
+        for o in theSearch.oxoList:
+            if fList.get(o, False):
+                info =  info + '\t' + str(fList[o][1])
+            else:
+                info = info + '\t' + str(0)
+
+        for ap in theSearch.ppList:
+            for i in range(1, 4):
+                if fList.get(ap, False):
+                    if fList[ap].get(i, False):
+                        info = info + '\t' + str(fList[ap][i])
+                    else:
+                        info = info + '\t' + str(0)
+                else:
+                    info = info + '\t' + str(0)
+
         FileName.write(info + '\n')
     else:
         print('invalid objects')
 
-def writeHeaders(FileName):
+
+def writeHeaders(FileName, theSearch):
     ''' Hardcoded headers.
         @return: None
         #   TODO: print from built list'''
@@ -46,7 +62,15 @@ def writeHeaders(FileName):
                   + 'RT \t'
                   + 'maxInts \t'
                   + 'fragmentNo   \t'
-                  + ' \n')
+                  )
+                  #+ ' \n')
+
+        for o in theSearch.oxoList:
+            header = (header + str(o) + '\t ')
+        header = (header + '1786.9487 \t _2 \t _3 \t 1990.0281 \t _2 \t _3 \t 2136.086 \t _2 \t _3')
+        header = (header + ' \n')
+
+
         FileName.write(header)
     else:
         print('Invalid filename: ' + str(FileName))
@@ -77,7 +101,7 @@ def readXlines(afile, x, list=False):
         afile.seek(orgiginalPos)
     except:
         print(str(afile) + ' is not a file.')
-    
+
     if list:
         return xLines
     else:
@@ -130,4 +154,3 @@ def isChargedVar(curr, pot, n):
         # curr + 0.5 +- tolerance
     temp = math.fabs(pot-curr)
     return math.fabs(temp-sV.chType[n]) < sV._variance
-
