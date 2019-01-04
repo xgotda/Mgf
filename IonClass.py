@@ -20,6 +20,7 @@ class Ions:
         self.charge = 0
         self.RT = 0
         self.scanNo = 0
+        self.MaxInts = 0
         self.pepmass = Peptide()
         self.Mass = 0  # Calculated using pepmass and charge.
         self.fragments = {}
@@ -39,7 +40,7 @@ class Ions:
             @rtype: dictionary '''
         if self.fragments.get(key, False):
             self.fragments[key][slItem.chtype] = intensity
-        else: 
+        else:
             self.fragments[key] = { 0 : slItem.ptype,
                                     slItem.chtype : intensity}
         self.fragmentCount += 1

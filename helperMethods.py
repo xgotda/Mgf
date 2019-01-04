@@ -23,8 +23,8 @@ def writeToFile(FileName, IonObject, theSearch):
                 + str(IonObject.charge) + '\t'
                 + deci.format(IonObject.Mass) + '\t'
                 + IonObject.RT + '\t'
-#                + str(max(IonObject.fragments.values())) + '\t'
-                + 'maxInts' + '\t'
+                + str(IonObject.MaxInts) + '\t'
+                # + 'maxInts' + '\t'
                 + str(IonObject.fragmentCount)
                 )
 
@@ -145,11 +145,10 @@ def chargedMassVar(mz, n):
         @rtype: float'''
     return (mz + (sV._Hplus * (n-1))) / n
 
-def isChargedVar(curr, pot, n):
+def isIsotope(curr, pot, n):
     ''' Compares curr(ent) and pot(ential) to see
-        if pot is the n-charged mass variation of curr.
-        @return: true if pot is a variation of curr
-        of charge n.
+        if pot is an isotope of curr.
+        @return: true if pot is curr's isotope.
         @rtype: boolean '''
         # curr + 0.5 +- tolerance
     temp = math.fabs(pot-curr)
