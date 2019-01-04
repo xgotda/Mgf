@@ -2,8 +2,9 @@
 Created on Tue Nov 27 12:56:27 2018
 
 @author: xgotda
-""" 
+"""
 
+import numpy as np
 import PeptideClass as pc
 from helperMethods import *
 
@@ -19,60 +20,74 @@ class DoSearch:
         self.oxo_ppm = glycan_ppm
         self.ppList = peptides
         self.pp_ppm = peptide_ppm
-        self.searchList = []
+        self.mcList = []
+        self.findList = []
         self.initGlycans()
         self.initPeptides()
         self.initPotentials()
 
+    def setMinMax(self):
+        n = 2.5
+        self.min = min(self.oxoList + self.mcList + self.ppList) - n
+        self.max = max(self.oxoList + self.mcList + self.ppList) + n
 
     def initGlycans(self):
         for o in self.oxoList:
             aGlycan = pc.FindPep(o, calcTol(o, self.oxo_ppm))
-            self.searchList.append(aGlycan)
+            self.findList.append(aGlycan)
 
     def initPeptides(self):
         for p in self.ppList:
             aPep = pc.FindPep(p, calcTol(p, self.pp_ppm), pc._P)
-            self.searchList.append(aPep)
+            self.findList.append(aPep)
 
     def initPotentials(self):
-        for p in self.ppList:
+
+        for parent in self.ppList:
             for n in range(2, 4):
-                c = chargedMassVar(p, n)
-                aPotential = pc.FindMcPep(p, c, calcTol(c, self.pp_ppm), n)
-                self.searchList.append(aPotential)
+                mz = chargedMassVar(parent, n)
+                self.mcList.append(mz)
+                aPotential = pc.FindMcPep(parent, mz, calcTol(mz, self.pp_ppm), n)
+                self.findList.append(aPotential)
+        print(self.mcList)
 
-    def search(self, currVals, ion):
-        ''' Adds currVals to fragments dict if equal '''
+    def reduceSearchList(self, npArray):
+        self.setMinMax()
+        npTop = npArray[np.nonzero(self.min < npArray[:, 0])[0],:]
+        npReduced = npTop[np.nonzero(npTop[:, 0] < self.max)[0],:]
+        return npReduced
+
+    def search(self, npArray, anIon):
+        for currVals in npArray:
+            self.lookInFindList(currVals, anIon)
+
+    def lookInFindList(self, currVals, ion):
         [curr_mz, curr_itsy] = currVals
-
-        for s in self.searchList:
-            if s.ptype == pc._G:
-                if compare(s.mz, curr_mz, s.tol):
-                    ion.addFragment(s.mz, curr_itsy, s)
-                    break
-            elif s.ptype == pc._P:
-                if compare(s.mz, curr_mz, s.tol):
-                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))    
-                    ion.addFragment(s.mz, curr_itsy, s)
-                    break
-            elif s.ptype == pc._M:
-                if compare(s.mz, curr_mz, s.tol):
+        for s in self.findList:
+            if compare(s.mz, curr_mz, s.tol):
+                # print(' ' + str(curr_mz))
+                mz_Key = s.mz
+                if s.ptype == pc._P:
                     curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
-                    ion.addFragment(s.parentPep, curr_itsy, s)
-                    break
+                if s.ptype == pc._M:
+                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
+                    mz_Key = s.parentPep
+                ion.addFragment(mz_Key, curr_itsy, s)
+                break
+
 
     def isoLine(self, aLine, mz, chtype):
         ''' Intensity of the line if it is its isotope.
             @return: intensity or zero
             @rtype: float '''
         returnIntensity = 0
-        if 'END' not in aLine and  aLine.strip() != '':
+        if 'BEGIN' not in aLine and aLine.strip() != '':
             nextVals = pepLine(aLine)
-            if isChargedVar(mz, nextVals[0], chtype):
+            # print(nextVals)
+            # if isChargedVar(mz, nextVals[0], chtype):
+            if isIsotope(mz, nextVals[0], chtype):
                 returnIntensity = nextVals[1]
         return returnIntensity
-
 
     def isoExists(self, mz, chtype):
         ''' @return: The intensity of the isotope if found and
@@ -84,7 +99,6 @@ class DoSearch:
             toReturn = max(self.isoLine(nextLines[0], mz, chtype),
                            self.isoLine(nextLines[1], mz, chtype))
         return toReturn
-
 
     def isoOldExists(self, mz, searchP, depth=1):
         ''' Checks if the n'th line (depth) in the file is
@@ -100,6 +114,3 @@ class DoSearch:
             if isChargedVar(mz, nextVals[0], searchP.chtype):
                 toReturn = nextVals[1]
         return toReturn
-
-    
-        
