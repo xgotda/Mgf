@@ -38,7 +38,6 @@ def ProcessMgf():
 
     with open(fileRead, 'r') as rf:
         with open(fileWrite, 'w') as wf:
-            aSearch.file = rf
             line = 'start'
             while line:
                 line = rf.readline()
@@ -62,13 +61,12 @@ def ProcessMgf():
                                 newIon.scanNo = stripLine(line)
                         else:
                             tempArr.append(pepLine(line))
-                            # aSearch.search(pepLine(line), newIon)
                         line = rf.readline()
 
                     npStart = np.array(tempArr)
                     newIon.MaxInts = max(npStart[:, 1])
-                    npWorking = aSearch.reduceSearchList(npStart)
-                    aSearch.search(npWorking, newIon)
+                    newIon.npWorking = aSearch.reduceSearchList(npStart)
+                    aSearch.search(newIon)
 
                     if newIon.valid:
                         addedIon += 1

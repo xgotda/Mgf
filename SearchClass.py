@@ -57,60 +57,40 @@ class DoSearch:
         npReduced = npTop[np.nonzero(npTop[:, 0] < self.max)[0],:]
         return npReduced
 
-    def search(self, npArray, anIon):
-        for currVals in npArray:
-            self.lookInFindList(currVals, anIon)
+    def search(self, anIon):
+        for i in range(len(anIon.npWorking)):
+            [curr_mz, curr_itsy] = anIon.npWorking[i]
+            for s in self.findList:
+                if compare(s.mz, curr_mz, s.tol):
+                    mz_Key = s.mz
+                    if s.ptype != pc._G:
+                        curr_itsy = max(curr_itsy, self.check(anIon, i, s.chtype))
+                    if s.ptype == pc._M:
+                        mz_Key = s.parentPep
+                    anIon.addFragment(mz_Key, curr_itsy, s)
+                    break
 
-    def lookInFindList(self, currVals, ion):
-        [curr_mz, curr_itsy] = currVals
-        for s in self.findList:
-            if compare(s.mz, curr_mz, s.tol):
-                # print(' ' + str(curr_mz))
-                mz_Key = s.mz
-                if s.ptype == pc._P:
-                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
-                if s.ptype == pc._M:
-                    curr_itsy = max(curr_itsy, self.isoExists(curr_mz, s.chtype))
-                    mz_Key = s.parentPep
-                ion.addFragment(mz_Key, curr_itsy, s)
-                break
+    def check(self, anIon, pos, chType):
+        ''' check current mz value against the next two and return max intensity
+        '''
+        currmz = anIon.npWorking[pos][0]
+        toR = 0
+        for i in range(1, 3):
+            if pos+i < len(anIon.npWorking):
+                [mz, insy] = anIon.npWorking[pos+i]
+                if isIsotope(currmz, mz, chType):
+                    toR = max(toR, insy)
+                    currmz = mz
+        return toR
 
-
-    def isoLine(self, aLine, mz, chtype):
         ''' Intensity of the line if it is its isotope.
             @return: intensity or zero
             @rtype: float '''
-        returnIntensity = 0
-        if 'BEGIN' not in aLine and aLine.strip() != '':
-            nextVals = pepLine(aLine)
-            # print(nextVals)
-            # if isChargedVar(mz, nextVals[0], chtype):
-            if isIsotope(mz, nextVals[0], chtype):
-                returnIntensity = nextVals[1]
-        return returnIntensity
 
-    def isoExists(self, mz, chtype):
-        ''' @return: The intensity of the isotope if found and
-                    zero if no isotope is found.
-            @rtype: float '''
-        toReturn = 0
-        if self.file:  # TODO: Better error handling here
-            nextLines = readXlines(self.file, 2, True)
-            toReturn = max(self.isoLine(nextLines[0], mz, chtype),
-                           self.isoLine(nextLines[1], mz, chtype))
-        return toReturn
 
-    def isoOldExists(self, mz, searchP, depth=1):
         ''' Checks if the n'th line (depth) in the file is
             an isotope of mz. Uses searchP (a Peptide object)
             for charge type (chtype).
             @return: The intensity of the isotope if found and
                     zero if no isotope is found.
             @rtype: float '''
-        toReturn = 0
-        nextLine = readXlines(self.file, depth)
-        if 'END' not in nextLine:
-            nextVals = pepLine(nextLine)
-            if isChargedVar(mz, nextVals[0], searchP.chtype):
-                toReturn = nextVals[1]
-        return toReturn
