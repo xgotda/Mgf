@@ -14,6 +14,31 @@ import PeptideClass as p
         Functions for file and string processing.
     ----------------------------------------------------------- '''
 
+def processIons(toPrint, search):
+    aRow = []
+    allRows = []
+    for ion in toPrint:
+        aRow = [ion.scanNo, ion.pepmass.mz, ion.charge,
+                ion.Mass, ion.RT, ion.MaxInts]
+        fList = ion.fragments
+        for o in search.oxoList:
+            if fList.get(o, False):
+                aRow.append(fList[o][1])
+            else:
+                aRow.append(0)
+
+        for ap in search.ppList:
+            for i in range(1, 4):
+                if fList.get(ap, False):
+                    if fList[ap].get(i, False):
+                        aRow.append(fList[ap][i])
+                    else:
+                        aRow.append(0)
+                else:
+                    aRow.append(0)
+        allRows.append(aRow)
+    return allRows
+
 def writeToFile(FileName, IonObject, theSearch):
     ''' Print details from the IonObject to file. '''
     if FileName and IonObject:
@@ -24,7 +49,6 @@ def writeToFile(FileName, IonObject, theSearch):
                 + deci.format(IonObject.Mass) + '\t'
                 + IonObject.RT + '\t'
                 + str(IonObject.MaxInts) + '\t'
-                # + 'maxInts' + '\t'
                 + str(IonObject.fragmentCount)
                 )
 
@@ -48,7 +72,6 @@ def writeToFile(FileName, IonObject, theSearch):
         FileName.write(info + '\n')
     else:
         print('invalid objects')
-
 
 def writeHeaders(FileName, theSearch):
     ''' Hardcoded headers.
@@ -85,27 +108,6 @@ def pepLine(aLine):
         @rtype: list '''
     aLine = aLine.split(' ')
     return [float(aLine[0]), float(aLine[1])]
-
-def readXlines(afile, x, list=False):
-    ''' Reads x lines ahead in the file but then
-        resets the file read position to the initial one.
-        @return: The line x lines down from current position.
-        @rtype: string '''
-    lineX = ''
-    xLines = []
-    try:
-        orgiginalPos = afile.tell()
-        for i in range(x):
-            lineX = afile.readline()
-            xLines.append(lineX.strip())
-        afile.seek(orgiginalPos)
-    except:
-        print(str(afile) + ' is not a file.')
-
-    if list:
-        return xLines
-    else:
-        return lineX
 
 
 ''' -----------------------------------------------------------
@@ -150,6 +152,6 @@ def isIsotope(curr, pot, n):
         if pot is an isotope of curr.
         @return: true if pot is curr's isotope.
         @rtype: boolean '''
-        # curr + 0.5 +- tolerance
+        # e.g. curr + 0.5 +- tolerance
     temp = math.fabs(pot-curr)
     return math.fabs(temp-sV.chType[n]) < sV._variance
