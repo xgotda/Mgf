@@ -15,7 +15,6 @@ class Ions:
 
     def __init__(self):
 
-        self.valid = False  # flag denoting if we have had at least one match
         self.title = ""
         self.charge = 0
         self.RT = 0
@@ -23,6 +22,8 @@ class Ions:
         self.MaxInts = 0
         self.pepmass = Peptide()
         self.Mass = 0  # Calculated using pepmass and charge.
+        self.valid = False  # flag denoting if we have had at least one match
+        self.npWorking = []
         self.fragments = {}
         self.fragmentCount = 0
 
@@ -32,7 +33,6 @@ class Ions:
             @rtype: float '''
         self.Mass = self.charge * (self.pepmass.mz - sV._Hplus)
 
-    #def addFragment(self, key, intensity, chtype):
     def addFragment(self, key, intensity, slItem):
         ''' Adds the intensity value for the given key
             to the fragments dictionary.

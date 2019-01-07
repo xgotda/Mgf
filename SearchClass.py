@@ -42,14 +42,13 @@ class DoSearch:
             self.findList.append(aPep)
 
     def initPotentials(self):
-
+        
         for parent in self.ppList:
             for n in range(2, 4):
                 mz = chargedMassVar(parent, n)
                 self.mcList.append(mz)
                 aPotential = pc.FindMcPep(parent, mz, calcTol(mz, self.pp_ppm), n)
                 self.findList.append(aPotential)
-        print(self.mcList)
 
     def reduceSearchList(self, npArray):
         self.setMinMax()
@@ -64,15 +63,18 @@ class DoSearch:
                 if compare(s.mz, curr_mz, s.tol):
                     mz_Key = s.mz
                     if s.ptype != pc._G:
-                        curr_itsy = max(curr_itsy, self.check(anIon, i, s.chtype))
+                        curr_itsy = max(curr_itsy,
+                                        self.check(anIon, i, s.chtype))
                     if s.ptype == pc._M:
                         mz_Key = s.parentPep
                     anIon.addFragment(mz_Key, curr_itsy, s)
                     break
 
     def check(self, anIon, pos, chType):
-        ''' check current mz value against the next two and return max intensity
-        '''
+        ''' Checks for isotopes of the current mz.
+            @return: The intensity of the isotope if found and
+                     zero if no isotope is found.
+            @rtype: float  '''
         currmz = anIon.npWorking[pos][0]
         toR = 0
         for i in range(1, 3):
@@ -82,15 +84,3 @@ class DoSearch:
                     toR = max(toR, insy)
                     currmz = mz
         return toR
-
-        ''' Intensity of the line if it is its isotope.
-            @return: intensity or zero
-            @rtype: float '''
-
-
-        ''' Checks if the n'th line (depth) in the file is
-            an isotope of mz. Uses searchP (a Peptide object)
-            for charge type (chtype).
-            @return: The intensity of the isotope if found and
-                    zero if no isotope is found.
-            @rtype: float '''

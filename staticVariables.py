@@ -40,11 +40,11 @@ Glycans = {
         }
 
 
-# Charge types
+''' Charge types: single, doubly and triply. Used to find isotopes. '''
 _single = 1
 _double = 2
 _triple = 3
-_variance = 0.01    #+- 0.01
+_variance = 0.01    #  Isotopic variation +- 0.01
 
 chType = {
         _single: 1/_single,
