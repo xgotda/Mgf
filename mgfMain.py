@@ -74,8 +74,10 @@ def ProcessMgf():
                         toPrint.append(newIon)
                     del newIon
             writeHeaders(wf, aSearch)
+            npAll = np.array(processIons(toPrint, aSearch))
             for ion in toPrint:
                 writeToFile(wf, ion, aSearch)
+            wf.write(str(npAll))
 
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))
