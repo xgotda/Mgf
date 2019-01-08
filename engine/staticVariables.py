@@ -6,7 +6,7 @@ Created on Fri Nov  2 12:50:54 2018
 @author: xgotda
 """
 
-_H = 1.00727647
+_Hplus = 1.00727647
 ''' Mass of a proton in atomic mass units (u) '''
 
 #   To be filtered by in the Spectra file
@@ -38,3 +38,16 @@ Glycans = {
         _NeuAc: 291.0954,
         _NeuGc: 307.0903
         }
+
+
+''' Charge types: single, doubly and triply. Used to find isotopes. '''
+_single = 1
+_double = 2
+_triple = 3
+_variance = 0.01    #  Isotopic variation +- 0.01
+
+chType = {
+        _single: 1/_single,
+        _double: 1/_double,
+        _triple: 1/_triple
+    }

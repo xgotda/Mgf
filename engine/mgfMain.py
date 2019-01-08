@@ -9,11 +9,12 @@ Created on Wed Oct 10 12:06:52 2018
 from IonClass import Ions
 from helperMethods import *
 from SearchClass import DoSearch
+import numpy as np
 
 
 # --- VARIABLES ---
-#fileRead = 'mgfFiles/small.mgf'
-fileRead = 'mgfFiles/QEHF_180716_15.mgf'
+fileRead = 'mgfFiles/smallProb.mgf'
+# fileRead = 'mgfFiles/QEHF_180716_15.mgf'
 # 'small.mgf'
 # 'smallProb.mgf'
 fileWrite = 'temp/sec.txt'
@@ -26,13 +27,6 @@ findOxo = [204.08667, 274.0921, 366.1395]
 pp_ppm = 5
 findPP = [1786.9487, 1990.0281, 2136.086]
 
-# aTolerance = 0.01
-
-fileRead, fileWrite, aTolerance = sys.argv[1:]
-print(fileRead + '\n' + fileWrite + '\n' + aTolerance)
-aTolerance = float(aTolerance)
-
-findMZ = [204.08667, 274.0921, 366.1395]
 
 aSearch = DoSearch(findOxo, oxo_ppm, findPP, pp_ppm)
 
@@ -44,7 +38,6 @@ def ProcessMgf():
 
     with open(fileRead, 'r') as rf:
         with open(fileWrite, 'w') as wf:
-            aSearch.file = rf
             line = 'start'
             while line:
                 line = rf.readline()
@@ -52,6 +45,7 @@ def ProcessMgf():
                 if 'BEGIN' in line:
                     records += 1
                     newIon = Ions()
+                    tempArr = []
                     line = rf.readline()
                     while 'END' not in line:
                         if '=' in line:
@@ -66,8 +60,13 @@ def ProcessMgf():
                             elif 'SCANS' in line:
                                 newIon.scanNo = stripLine(line)
                         else:
-                            aSearch.search(pepLine(line), newIon)
+                            tempArr.append(pepLine(line))
                         line = rf.readline()
+
+                    npStart = np.array(tempArr)
+                    newIon.MaxInts = max(npStart[:, 1])
+                    newIon.npWorking = aSearch.reduceSearchList(npStart)
+                    aSearch.search(newIon)
 
                     if newIon.valid:
                         addedIon += 1
@@ -75,8 +74,10 @@ def ProcessMgf():
                         toPrint.append(newIon)
                     del newIon
             writeHeaders(wf, aSearch)
+            npAll = np.array(processIons(toPrint, aSearch))
             for ion in toPrint:
                 writeToFile(wf, ion, aSearch)
+            wf.write(str(npAll))
 
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))

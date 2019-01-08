@@ -5,3 +5,5 @@
 /mgfFiles
 *.txt
 .ipynb_*
+temp/
+__pycache*
