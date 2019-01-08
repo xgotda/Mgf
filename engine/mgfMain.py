@@ -13,11 +13,11 @@ import numpy as np
 
 
 # --- VARIABLES ---
-fileRead = 'mgfFiles/smallProb.mgf'
+fileRead = '../mgfFiles/smallProb.mgf'
 # fileRead = 'mgfFiles/QEHF_180716_15.mgf'
 # 'small.mgf'
 # 'smallProb.mgf'
-fileWrite = 'temp/sec.txt'
+fileWrite = '../temp/sec.txt'
 
 #  oxo = oxonium (glycan)
 oxo_ppm = 5
