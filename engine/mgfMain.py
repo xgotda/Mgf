@@ -6,6 +6,7 @@ Created on Wed Oct 10 12:06:52 2018
 @author: xgotda
 """
 
+import sys
 from IonClass import Ions
 from helperMethods import *
 from SearchClass import DoSearch
@@ -18,6 +19,10 @@ fileRead = '../mgfFiles/smallProb.mgf'
 # 'small.mgf'
 # 'smallProb.mgf'
 fileWrite = '../temp/sec.txt'
+
+fileRead, fileWrite, aTolerance = sys.argv[1:]
+print(fileRead + '\n' + fileWrite + '\n' + aTolerance)
+aTolerance = float(aTolerance)
 
 #  oxo = oxonium (glycan)
 oxo_ppm = 5
@@ -77,7 +82,7 @@ def ProcessMgf():
             npAll = np.array(processIons(toPrint, aSearch))
             for ion in toPrint:
                 writeToFile(wf, ion, aSearch)
-            wf.write(str(npAll))
+            # wf.write(str(npAll))
 
     print('Lines read: ' + str(linesRead))
     print('Records: ' + str(records))
@@ -86,3 +91,4 @@ def ProcessMgf():
 
 # main - call methods to be executed
 ProcessMgf()
+print('Done in MgfMain.py!')

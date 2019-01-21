@@ -1,17 +1,20 @@
 {
-  "name": "Electron mgf",
+  "name": "pymgf",
+  "productName": "Ioniser",
   "version": "1.0.0",
   "description": "Mini mgf",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . /builds/testAppEP --platform=win32 --arch=x64 --asar"
+    "build": "electron-packager . testAppEP --platform=linux --arch=x64 --asar --out=../builds/",
+    "package:linux": "electron-packager . bob --platform=linux --arch=x64 --out=../builds/ --icon=../assets/316.png"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/xgotda/mgf",
   "keywords": [
     "Electron",
     "mgf"
   ],
+
 
   "author": "xgotda",
   "devDependencies": {

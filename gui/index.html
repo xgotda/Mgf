@@ -2,44 +2,59 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Process mgf - basic</title>
-    <script src="linkers/link.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Ioniser</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   </head>
 
   <body>
-    <div class="container">
-      <h1>the IONISER!</h1>
-      <br>
-      <div class="container">
-        <label for="fileRead">Enter file to be read   </label>
-        <input id ="fileRead" type="file" placeholder="../mgfFiles/small.mgf" name="fileRead"/>
-        <br>
-        <label for="fileWrite">Save file as:  </label>
-        <input id="fileWrite" type="text" placeholder="../sec.txt" name="fileWrite">
-        <br>
-        <label for="aTolerance">Enter tolerance: </label>
-        <input type="number" id="aTolerance" placeholder="0.01" step="0.01">
-      </div>
-      <div class="container">
-        <button id="process" class="btn btn-success" onclick="do_process()"> Process </button>
-      </div>
-      <br>
 
-      <div class="container">
-        <h1>sysinfoapp</h1>
-        <div id="output"></div>
+    <div class="container">
+      <div class="row">
+        <br>
       </div>
     </div>
+
+
+    <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <div class="form-group">
+          <button id="ofm" class="btn btn-default btn-sm" name="fileManagerBtn"> Select mgf file
+            <input id="fileRead" class="form-control" readonly=true>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="fileWrite">Save file as:  </label>
+          <input id="fileWrite" class="form-control" type="text" name="fileWrite">
+        </div>
+        <div class="form-group">
+          <label for="aTolerance">Enter tolerance: </label>
+          <input type="number" class="form-control" id="aTolerance" step="1">
+        </div>
+      </div>
+      <div class="col-sm">
+        <button id="process" class="btn btn-success"> Process </button>
+      </div>
+    </div>
+    </div>
+  </div>
   </body>
 
 
-  <script>
-    console.log(process)
-  </script>
-  <script>
+  <!-- <script>
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const fileManagerBtn = document.getElementById('open-file-manager')
+    fileManagerBtn.addEventListener('click', (event) => {
+      console.log(12223) // console is in developerTools
+       // theMain.openMgfFile()
+    })
+
+  </script> -->
+  <script src="linkers/link.js"></script>
+  <script src="renderer.js">
     // You can also require other files to run in this process
-    require('./renderer.js')
+    // require('./renderer.js')
   </script>
 </html>
