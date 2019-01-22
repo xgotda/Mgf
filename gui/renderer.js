@@ -18,3 +18,23 @@ if(fileManagerBtn){
 ipcRenderer.on('ofmRequest', function(e, selected){
   document.getElementById('fileRead'). value = selected
 })
+
+
+const fileWriteBtn = document.getElementById('sfm')
+if(fileWriteBtn){
+  fileWriteBtn.addEventListener('click', (event) => {
+    ipcRenderer.send('sfRequest')
+  })
+}
+
+ipcRenderer.on('sfRequest', function(e, selected){
+  document.getElementById('fileWrite'). value = selected
+})
+
+
+processBtn = document.getElementById('process')
+if(processBtn){
+	processBtn.addEventListener('click', (event) => {
+		do_process()
+	})
+}

@@ -16,42 +16,53 @@
     </div>
 
 
-    <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <div class="form-group">
-          <button id="ofm" class="btn btn-default btn-sm" name="fileManagerBtn"> Select mgf file
-            <input id="fileRead" class="form-control" readonly=true>
-          </button>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-group form-group-sm">
+            <button id="ofm" class="btn btn-info btn-sm btn-block" style="text-align: left" name="fileManagerBtn"> Select mgf file
+              <input id="fileRead" class="form-control" disabled=true>
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="fileWrite">Save file as:  </label>
-          <input id="fileWrite" class="form-control" type="text" name="fileWrite">
-        </div>
-        <div class="form-group">
-          <label for="aTolerance">Enter tolerance: </label>
-          <input type="number" class="form-control" id="aTolerance" step="1">
+        <div class="col-sm">
+          <div class="form-group form-group-sm">
+            <button id="sfm" class="btn btn-info btn-sm">Save output as  </button>
+            <input id="fileWrite" class="form-control" type="text" name="fileWrite">
+          </div>
+
         </div>
       </div>
-      <div class="col-sm">
-        <button id="process" class="btn btn-success"> Process </button>
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-group form-group-sm">
+            <label for="glycans">Glycans: </label>
+            <textarea class="form-control input-sm" rows="6" type="text" id="glycans"></textarea>
+            <label for="glycanppm">Glycan ppm: </label>
+            <input type="number" class="form-control" id="glycanppm">
+          </div>
+
+        </div>
+        <div class="col-sm">
+          <div class="form-group form-group-sm">
+            <label for="peptides">Peptides: </label>
+            <textarea class="form-control input-sm" rows="6" type="text" id="peptides"></textarea>
+            <label for="peptideppm">Peptide ppm: </label>
+            <input type="number" class="form-control" id="peptideppm">
+          </div>
+
+        </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <button id="process" class="btn btn-success btn-block"> Process </button>
+        </div>
+      </div>
     </div>
   </div>
   </body>
 
-
-  <!-- <script>
-    const electron = require('electron');
-    const {ipcRenderer} = electron;
-    const fileManagerBtn = document.getElementById('open-file-manager')
-    fileManagerBtn.addEventListener('click', (event) => {
-      console.log(12223) // console is in developerTools
-       // theMain.openMgfFile()
-    })
-
-  </script> -->
   <script src="linkers/link.js"></script>
   <script src="renderer.js">
     // You can also require other files to run in this process

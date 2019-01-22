@@ -103,17 +103,25 @@ const mainMenuTemplate = [
   }
 ]
 
+// ipc requests to and from renderer
 ipcMain.on('ofmRequest', function(e){
-  result = openMgfFile()
-  mainWindow.webContents.send('ofmRequest', result)
+  openMgfFile()
 })
-
 function openMgfFile() {
   result = dialog.showOpenDialog(mainWindow, {
     properties: ['openFile']
   })
-  return result
+  mainWindow.webContents.send('ofmRequest', result)
 }
+
+ipcMain.on('sfRequest', function(e){
+  saveFile()
+})
+function saveFile() {
+  result = dialog.showSaveDialog(mainWindow)
+  mainWindow.webContents.send('sfRequest', result)
+}
+
 
 // If mac, add empty object to menu
 if(process.platform == 'darwin'){
