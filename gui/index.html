@@ -3,8 +3,12 @@
   <head>
     <meta charset="UTF-8">
     <title>Ioniser</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"> -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
   </head>
 
   <body>
@@ -20,9 +24,9 @@
       <div class="row">
         <div class="col-sm">
           <div class="form-group form-group-sm">
-            <button id="ofm" class="btn btn-info btn-sm btn-block" style="text-align: left" name="fileManagerBtn"> Select mgf file
-              <input id="fileRead" class="form-control" disabled=true>
+            <button id="ofm" class="btn btn-info btn-sm " style="text-align: left" name="fileManagerBtn"> Select mgf file
             </button>
+            <input id="fileRead" class="form-control" disabled=true>
           </div>
         </div>
         <div class="col-sm">
@@ -37,6 +41,7 @@
         <div class="col-sm">
           <div class="form-group form-group-sm">
             <label for="glycans">Glycans: </label>
+            <ul></ul>
             <textarea class="form-control input-sm" rows="6" type="text" id="glycans"></textarea>
             <label for="glycanppm">Glycan ppm: </label>
             <input type="number" class="form-control" id="glycanppm">
@@ -65,7 +70,32 @@
 
   <script src="linkers/link.js"></script>
   <script src="renderer.js">
-    // You can also require other files to run in this process
-    // require('./renderer.js')
+  // You can also require other files to run in this process
+  // require('./renderer.js')
+  </script>
+  <script>
+    const ul = document.querySelector('ul');
+
+    ipcRenderer.on('glycan:add', function(e, glycan){
+     ul.className = 'collection';
+     const li = document.createElement('li');
+     li.className = 'collection-glycan';
+     const glycanText = document.createTextNode(glycan);
+     li.appendChild(glycanText);
+     ul.appendChild(li);
+    });
+
+    ipcRenderer.on('glycan:clear', function(){
+     ul.className = '';
+     ul.innerHTML = '';
+    });
+
+    ul.addEventListener('dblclick', removeGlycan);
+    function removeGlycan(e){
+     event.target.remove();
+     if(ul.children.length == 0){
+       ul.className = '';
+     }
+    }
   </script>
 </html>

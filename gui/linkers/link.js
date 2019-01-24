@@ -10,7 +10,7 @@ function do_process(){
 	var fileWrite = document.getElementById('fileWrite').value
 	var glycanppm = document.getElementById('glycanppm').value
 
-	if (fileRead && fileWrite && aTolerance){
+	if (fileRead && fileWrite && glycanppm){
 		var options = {
 			scriptPath : path.join(__dirname, '../engine/'),
 			args : [fileRead, fileWrite, glycanppm]

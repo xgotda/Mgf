@@ -73,16 +73,73 @@ app.on('activate', function () {
   }
 })
 
+// Handle add glycan window
+function createAddWindow(){
+  addWindow = new BrowserWindow({
+    width: 250,
+    height:180,
+    // frame: false,
+    title:'Add glycan',
+    parent:mainWindow,
+    modal: true
+  });
+  addWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'addWindow.html'),
+    protocol: 'file:',
+    slashes:true
+  }));
+  // Handle garbage collection
+  addWindow.on('close', function(){
+    addWindow = null;
+  });
+}
+
 /* ---------------------------------------------------------------------------
    In this file you can include the rest of your app's specific main process
    code. You can also put them in separate files and require them here.
  ---------------------------------------------------------------------------- */
+
+// --- IPC requests to and from renderer ---
+
+// Open file
+ipcMain.on('ofmRequest', function(e){
+  openMgfFile()
+})
+function openMgfFile() {
+  result = dialog.showOpenDialog(mainWindow, {
+    properties: ['openFile']
+  })
+  mainWindow.webContents.send('ofmRequest', result)
+}
+
+// Save file
+ipcMain.on('sfRequest', function(e){
+  saveFile()
+})
+function saveFile() {
+  result = dialog.showSaveDialog(mainWindow)
+  mainWindow.webContents.send('sfRequest', result)
+}
+
+// Catch glycan:add
+ipcMain.on('glycan:add', function(e, glycan){
+  mainWindow.webContents.send('glycan:add', glycan);
+  addWindow.close();
+});
 
 // Create menu template
 const mainMenuTemplate = [
   {
     label: 'File',
     submenu: [
+      {
+        label:'Add Glycan',
+        accelerator: process.platform == 'darwin' ? 'Command+G' :
+        'Ctrl+G',
+        click(){
+          createAddWindow();
+        }
+      },
       {
         label: 'Select mgf file',
         accelerator: process.platform == 'darwin' ? 'Command+O' :
@@ -102,26 +159,6 @@ const mainMenuTemplate = [
     ]
   }
 ]
-
-// ipc requests to and from renderer
-ipcMain.on('ofmRequest', function(e){
-  openMgfFile()
-})
-function openMgfFile() {
-  result = dialog.showOpenDialog(mainWindow, {
-    properties: ['openFile']
-  })
-  mainWindow.webContents.send('ofmRequest', result)
-}
-
-ipcMain.on('sfRequest', function(e){
-  saveFile()
-})
-function saveFile() {
-  result = dialog.showSaveDialog(mainWindow)
-  mainWindow.webContents.send('sfRequest', result)
-}
-
 
 // If mac, add empty object to menu
 if(process.platform == 'darwin'){
