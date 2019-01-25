@@ -19,53 +19,49 @@
       </div>
     </div>
 
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-group form-group-sm">
-            <button id="ofm" class="btn btn-info btn-sm " style="text-align: left" name="fileManagerBtn"> Select mgf file
-            </button>
-            <input id="fileRead" class="form-control" disabled=true>
+    <form id="processInfo">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group form-group-sm">
+              <button id="ofm" class="btn btn-info btn-sm" name="fileManagerBtn"> Select mgf file</button>
+              <input id="fileRead" class="form-control" disabled=true required>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group form-group-sm">
+              <button id="sfm" class="btn btn-info btn-sm">Save output as  </button>
+              <input id="fileWrite" class="form-control" type="text" name="fileWrite" required>
+            </div>
           </div>
         </div>
-        <div class="col-sm">
-          <div class="form-group form-group-sm">
-            <button id="sfm" class="btn btn-info btn-sm">Save output as  </button>
-            <input id="fileWrite" class="form-control" type="text" name="fileWrite">
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-group form-group-sm">
+              <label for="glycans">Glycans: </label>
+              <textarea id="glycans" class="form-control input-sm" form="processInfo" rows="6" type="text"></textarea>
+              <label for="glycanppm">Glycan ppm: </label>
+              <input id="glycanppm" type="number" class="form-control">
+            </div>
           </div>
+          <div class="col-sm">
+            <div class="form-group form-group-sm">
+              <label for="peptides">Peptides: </label>
+              <textarea id="peptides" class="form-control input-sm" form="processInfo" rows="6" type="text"></textarea>
+              <label for="peptideppm">Peptide ppm: </label>
+              <input id="peptideppm" type="number" class="form-control">
+            </div>
 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-8">
+            <button id="process" type="submit" class="btn btn-success btn-block"> Process </button>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-group form-group-sm">
-            <label for="glycans">Glycans: </label>
-            <ul></ul>
-            <textarea class="form-control input-sm" rows="6" type="text" id="glycans"></textarea>
-            <label for="glycanppm">Glycan ppm: </label>
-            <input type="number" class="form-control" id="glycanppm">
-          </div>
-
-        </div>
-        <div class="col-sm">
-          <div class="form-group form-group-sm">
-            <label for="peptides">Peptides: </label>
-            <textarea class="form-control input-sm" rows="6" type="text" id="peptides"></textarea>
-            <label for="peptideppm">Peptide ppm: </label>
-            <input type="number" class="form-control" id="peptideppm">
-          </div>
-
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-          <button id="process" class="btn btn-success btn-block"> Process </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  </form>
   </body>
 
   <script src="linkers/link.js"></script>
@@ -74,28 +70,36 @@
   // require('./renderer.js')
   </script>
   <script>
-    const ul = document.querySelector('ul');
-
+    const glycansText = document.getElementById('glycans')
     ipcRenderer.on('glycan:add', function(e, glycan){
-     ul.className = 'collection';
-     const li = document.createElement('li');
-     li.className = 'collection-glycan';
-     const glycanText = document.createTextNode(glycan);
-     li.appendChild(glycanText);
-     ul.appendChild(li);
+      oldArr = glycansText.value.split('\n')
+      allVals = oldArr.concat(glycan)
+
+      // TODO:
+      // Remove to separate function so that can be called
+      // from textarea event ('submit' or 'onleave')
+      // Does not remove newline if in the middle!! FIX!
+      uniqueVals = Array.from(new Set(allVals));
+      console.log(uniqueVals.toString());
+      glycansText.value = ''
+      uniqueVals.forEach((item, index) => {
+        glycansText.value = glycansText.value + item + '\n'
+      })
+
+      // list = ''
+      // glycan.forEach((item, index) =>{
+      //   console.log(item)
+      //   list = list + item + '\n'
+      // })
+      // console.log(glycansText.rows);
+      // old = glycansText.value
+      // console.log(old.split('\n'));
+      // if (old == ''){
+      //   glycansText.value = list;
+      // }else{
+      //   glycansText.value = old + '\n' + list;
+      // }
     });
 
-    ipcRenderer.on('glycan:clear', function(){
-     ul.className = '';
-     ul.innerHTML = '';
-    });
-
-    ul.addEventListener('dblclick', removeGlycan);
-    function removeGlycan(e){
-     event.target.remove();
-     if(ul.children.length == 0){
-       ul.className = '';
-     }
-    }
   </script>
 </html>

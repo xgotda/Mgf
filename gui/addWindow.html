@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Add Glycan</title>
+  <title>Select Glycan(s)</title>
   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
   <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
@@ -15,11 +15,15 @@
     <div class="row">
     <div class="col">
       <form id="glycanForm">
-        <div>
-          <label>Enter value:</label>
-          <input class="form-control input-sm" type="text" id="glycan" autofocus="true">
-        </div>
-        <button class="btn btn-info btn-block" type="submit">Add glycan</button>
+        <!-- <div> -->
+          <!-- <label>Enter value:</label> -->
+          <!-- <label>Select glycan(s)</label><br> -->
+          <!-- <input class="form-control input-sm" type="text" id="glycan" autofocus="true"> -->
+          <input id="Fuc" type="checkbox" value="146"> 146 (Fuc)<br>
+          <input id="Hex" type="checkbox" value="162"> 162 (Hex)<br>
+          <input id="HexA" type="checkbox" value="176"> 176 (HexA)<br>
+        <!-- </div> -->
+        <button class="btn btn-info btn-block" type="submit">Add glycan(s)</button>
       </form>
     </div>
   </div>
