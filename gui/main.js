@@ -12,10 +12,11 @@ let mainWindow
 
 function createWindow () {
   const windowOptions = {
-    width: 700,
+    width: 580,
     height: 550,
     minWidth: 350,
     minHeight: 300,
+    // resizable: false,
     title: app.getName()
   }
   if (process.platform === 'linux') {
@@ -76,18 +77,24 @@ app.on('activate', function () {
 // Handle add glycan window
 function createAddWindow(){
   addWindow = new BrowserWindow({
-    width: 250,
-    height:180,
-    // frame: false,
+    width: 350,
+    height: 180,
+    minHeight: 200,
+    minWidth: 200,
     title:'Add glycan',
     parent:mainWindow,
-    modal: true
+    resizable: false,
+    modal: true,
+    skipTaskbar: true
   });
   addWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'addWindow.html'),
     protocol: 'file:',
     slashes:true
   }));
+
+  addWindow.setMenu(null)
+
   // Handle garbage collection
   addWindow.on('close', function(){
     addWindow = null;
@@ -101,7 +108,7 @@ function createAddWindow(){
 
 // --- IPC requests to and from renderer ---
 
-// Open file
+// Open mgf file
 ipcMain.on('ofmRequest', function(e){
   openMgfFile()
 })
@@ -111,6 +118,13 @@ function openMgfFile() {
   })
   mainWindow.webContents.send('ofmRequest', result)
 }
+// Open spectra file
+ipcMain.on('spectraRequest', function(e){
+  result = dialog.showOpenDialog(mainWindow, {
+    properties: ['openFile']
+  })
+  mainWindow.webContents.send('spectraRequest', result)
+})
 
 // Save file
 ipcMain.on('sfRequest', function(e){
@@ -121,16 +135,16 @@ function saveFile() {
   mainWindow.webContents.send('sfRequest', result)
 }
 
-// Catch glycan:add
-ipcMain.on('glycan:add', function(e, glycan){
-  mainWindow.webContents.send('glycan:add', glycan);
+// Catch staticGlycan:add
+ipcMain.on('staticGlycan:add', function(e, glycan){
+  mainWindow.webContents.send('staticGlycan:add', glycan);
   addWindow.close();
 });
 
 // Create menu template
 const mainMenuTemplate = [
   {
-    label: 'File',
+    label: 'Ioniser',
     submenu: [
       {
         label:'Add Glycan',
@@ -146,6 +160,14 @@ const mainMenuTemplate = [
         'Ctrl+O',
         click(){
           openMgfFile()
+        }
+      },
+      {
+        label: 'Save output as',
+        accelerator: process.platform == 'darwin' ? 'Command+S' :
+        'Ctrl+S',
+        click(){
+          saveFile()
         }
       },
       {

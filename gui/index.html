@@ -27,8 +27,8 @@
               <button id="ofm" class="btn btn-info btn-sm" name="fileManagerBtn"> Select mgf file</button>
               <input id="fileRead" class="form-control" disabled=true required>
             </div>
-          </div>
-          <div class="col-sm">
+          <!-- </div>
+          <div class="col-sm"> -->
             <div class="form-group form-group-sm">
               <button id="sfm" class="btn btn-info btn-sm">Save output as  </button>
               <input id="fileWrite" class="form-control" type="text" name="fileWrite" required>
@@ -36,23 +36,36 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm">
+          <div class="col-sm-4">
             <div class="form-group form-group-sm">
               <label for="glycans">Glycans: </label>
-              <textarea id="glycans" class="form-control input-sm" form="processInfo" rows="6" type="text"></textarea>
+              <textarea id="glycans" class="form-control input-xs" form="processInfo" rows="6" type="text"></textarea>
               <label for="glycanppm">Glycan ppm: </label>
               <input id="glycanppm" type="number" class="form-control">
             </div>
           </div>
-          <div class="col-sm">
+          <div class="col-sm-4">
             <div class="form-group form-group-sm">
               <label for="peptides">Peptides: </label>
-              <textarea id="peptides" class="form-control input-sm" form="processInfo" rows="6" type="text"></textarea>
+              <textarea id="peptides" class="form-control input-xs" form="processInfo" rows="6" type="text"></textarea>
               <label for="peptideppm">Peptide ppm: </label>
               <input id="peptideppm" type="number" class="form-control">
             </div>
-
           </div>
+          <div class="col-sm-4" >
+            <br>
+            <label>Include mulit-charged values:</label> <br>
+            <input id="dblCharged" type="checkbox" name="" value=""> Doubly <br>
+            <input id="tplCharged" type="checkbox" name="" value=""> Triply
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm">
+          <div class="form-group form-group-sm">
+            <button id="spectra" class="btn btn-info btn-sm">Select spectra file:  </button>
+            <input id="spectraFile" class="form-control" disabled=true type="text" name="spectraFile">
+          </div>
+        </div>
         </div>
         <div class="row">
           <div class="col-sm-2"></div>
@@ -64,42 +77,8 @@
   </form>
   </body>
 
-  <script src="linkers/link.js"></script>
-  <script src="renderer.js">
-  // You can also require other files to run in this process
-  // require('./renderer.js')
-  </script>
   <script>
-    const glycansText = document.getElementById('glycans')
-    ipcRenderer.on('glycan:add', function(e, glycan){
-      oldArr = glycansText.value.split('\n')
-      allVals = oldArr.concat(glycan)
-
-      // TODO:
-      // Remove to separate function so that can be called
-      // from textarea event ('submit' or 'onleave')
-      // Does not remove newline if in the middle!! FIX!
-      uniqueVals = Array.from(new Set(allVals));
-      console.log(uniqueVals.toString());
-      glycansText.value = ''
-      uniqueVals.forEach((item, index) => {
-        glycansText.value = glycansText.value + item + '\n'
-      })
-
-      // list = ''
-      // glycan.forEach((item, index) =>{
-      //   console.log(item)
-      //   list = list + item + '\n'
-      // })
-      // console.log(glycansText.rows);
-      // old = glycansText.value
-      // console.log(old.split('\n'));
-      // if (old == ''){
-      //   glycansText.value = list;
-      // }else{
-      //   glycansText.value = old + '\n' + list;
-      // }
-    });
-
+    require('./renderer.js')
+    require('./linkers/link.js')
   </script>
 </html>

@@ -13,5 +13,5 @@ glycanForm.addEventListener('submit', (e) => {
       glycan.push(val.value)
     }
   }
-  ipcRenderer.send('glycan:add', glycan)
+  ipcRenderer.send('staticGlycan:add', glycan)
 })
