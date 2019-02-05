@@ -11,18 +11,15 @@ from IonClass import Ions
 from helperMethods import *
 from SearchClass import DoSearch
 import numpy as np
+from distutils.util import strtobool
 
 
 # --- VARIABLES ---
-fileRead = '../mgfFiles/smallProb.mgf'
-# fileRead = 'mgfFiles/QEHF_180716_15.mgf'
+# fileRead = 'mgfFiles/small.mgf'
+fileRead = 'mgfFiles/QEHF_180716_15.mgf'
 # 'small.mgf'
 # 'smallProb.mgf'
-fileWrite = '../temp/sec.txt'
-
-fileRead, fileWrite, aTolerance = sys.argv[1:]
-print(fileRead + '\n' + fileWrite + '\n' + aTolerance)
-aTolerance = float(aTolerance)
+fileWrite = 'temp/PP.txt'
 
 #  oxo = oxonium (glycan)
 oxo_ppm = 5
@@ -31,6 +28,23 @@ findOxo = [204.08667, 274.0921, 366.1395]
 # #  pp = peptide (larger fragment)
 pp_ppm = 5
 findPP = [1786.9487, 1990.0281, 2136.086]
+
+
+# print(sys.argv[:])
+# Convert to correct type.
+[fileRead, fileWrite, findOxo, oxo_ppm, findPP, pp_ppm,
+dblCharged, tplCharged] = sys.argv[1:]
+
+temp = [float(val) for val in findOxo.split('\n') if val]
+findOxo = temp
+temp = [float(val) for val in findPP.split('\n') if val]
+findPP = temp
+if oxo_ppm:
+    oxo_ppm = int(oxo_ppm)
+if pp_ppm:
+    pp_ppm = int(pp_ppm)
+dblCharged = bool(strtobool(dblCharged))
+tplCharged = bool(strtobool(tplCharged))
 
 
 aSearch = DoSearch(findOxo, oxo_ppm, findPP, pp_ppm)
