@@ -29,6 +29,11 @@ def processIons(toPrint, search):
 
         for ap in search.ppList:
             for i in range(1, 4):
+                # if fList.get(ap, False) and if fList[ap].get(i, False):
+                #     aRow.append(fList[ap][i])
+                # else:
+                #     aRow.append(0)
+                # This instead of the code below. check if does the same thing!
                 if fList.get(ap, False):
                     if fList[ap].get(i, False):
                         aRow.append(fList[ap][i])
@@ -90,7 +95,9 @@ def writeHeaders(FileName, theSearch):
 
         for o in theSearch.oxoList:
             header = (header + str(o) + '\t ')
-        header = (header + '1786.9487 \t _2 \t _3 \t 1990.0281 \t _2 \t _3 \t 2136.086 \t _2 \t _3')
+        for p in theSearch.ppList:
+            header = (header + str(p) + '\t _2 \t _3 \t ')
+        # header = (header + '1786.9487 \t _2 \t _3 \t 1990.0281 \t _2 \t _3 \t 2136.086 \t _2 \t _3')
         header = (header + ' \n')
 
 
@@ -113,7 +120,6 @@ def pepLine(aLine):
 ''' -----------------------------------------------------------
     Functions for mathematical and list processing.
     ----------------------------------------------------------- '''
-
 
 def compare(tofind, value, tolerance):
     ''' Compare whether two values are within

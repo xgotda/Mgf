@@ -6,8 +6,6 @@ Created on Fri Nov  2 12:50:54 2018
 @author: xgotda
 """
 
-_Hplus = 1.00727647
-''' Mass of a proton in atomic mass units (u) '''
 
 #   To be filtered by in the Spectra file
 #   but not searched for by weight in mgf file
@@ -19,6 +17,9 @@ _Hplus = 1.00727647
 #    new Glycan("Na+", 22.989768f, true),
 #    new Glycan("Phosp", 79.9663f, true),
 #    new Glycan("Sulph", 79.9568f, true)
+
+_Hplus = 1.00727647
+''' Mass of a proton in atomic mass units (u) '''
 
 _Fuc = 'Fuc'
 _Hex = 'Hex'
