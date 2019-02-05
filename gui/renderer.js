@@ -48,7 +48,12 @@ ipcRenderer.on('sfRequest', function(e, selected){
   document.getElementById('fileWrite').value = selected
 })
 
-
+const glycanBtn = document.getElementById('glcBtn')
+if(glycanBtn){
+  glycanBtn.addEventListener('click', (e) => {
+    ipcRenderer.send('staticGlycan:open')
+  })
+}
 
 glycansText.addEventListener('mousemove', (e) => {
   removeDuplicates(glycansText, '')

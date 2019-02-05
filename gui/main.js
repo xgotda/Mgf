@@ -13,7 +13,7 @@ let mainWindow
 function createWindow () {
   const windowOptions = {
     width: 580,
-    height: 700,
+    height: 650,
     minWidth: 350,
     minHeight: 300,
     // resizable: false,
@@ -78,7 +78,7 @@ app.on('activate', function () {
 function createAddWindow(){
   addWindow = new BrowserWindow({
     width: 380,
-    height: 180,
+    height: 185,
     minHeight: 200,
     minWidth: 200,
     title:'Add glycan',
@@ -142,6 +142,11 @@ function saveFile() {
   result = dialog.showSaveDialog(mainWindow)
   mainWindow.webContents.send('sfRequest', result)
 }
+
+// Open AddGlycans from renderer
+ipcMain.on('staticGlycan:open', function(e){
+  createAddWindow()
+})
 
 // Catch staticGlycan:add
 ipcMain.on('staticGlycan:add', function(e, glycan){
