@@ -25,16 +25,16 @@ ipcRenderer.on('ofmRequest', function(e, selected){
   document.getElementById('fileRead').value = selected
 })
 
-// Open file manager for spectra file.
-const spectraFileBtn = document.getElementById('spectra')
-if(spectraFileBtn){
-  spectraFileBtn.addEventListener('click', (event) => {
-    ipcRenderer.send('spectraRequest')
-  })
-}
-ipcRenderer.on('spectraRequest', function(e, selected){
-  document.getElementById('spectraFile').value = selected
-})
+// // Open file manager for spectra file.
+// const spectraFileBtn = document.getElementById('spectra')
+// if(spectraFileBtn){
+//   spectraFileBtn.addEventListener('click', (event) => {
+//     ipcRenderer.send('spectraRequest')
+//   })
+// }
+// ipcRenderer.on('spectraRequest', function(e, selected){
+//   document.getElementById('spectraFile').value = selected
+// })
 
 
 // Save file manager
@@ -45,36 +45,35 @@ if(fileWriteBtn){
   })
 }
 ipcRenderer.on('sfRequest', function(e, selected){
-  document.getElementById('fileWrite'). value = selected
+  document.getElementById('fileWrite').value = selected
 })
 
 
-processBtn = document.getElementById('process')
-if(processBtn){
-	processBtn.addEventListener('click', (event) => {
-		do_process()
-	})
-}
 
 glycansText.addEventListener('mousemove', (e) => {
+  removeDuplicates(glycansText, '')
+})
+glycansText.addEventListener('blur', (e) => {
   removeDuplicates(glycansText, '')
 })
 const peptidesText = document.getElementById('peptides')
 peptidesText.addEventListener('mousemove', (e) => {
   removeDuplicates(peptidesText, '')
 })
-
+peptidesText.addEventListener('blur', (e) => {
+  removeDuplicates(peptidesText, '')
+})
 
 // Remove duplicate values in textbox. (Pass in box and values to add.)
 function removeDuplicates(valTextWin, newVals){
   oldArr = valTextWin.value.split('\n')
   allVals = oldArr.concat(newVals)
 
-  // TODO: Does not remove newline if in the middle!! FIX!
   uniqueVals = Array.from(new Set(allVals));
-  // console.log(uniqueVals.toString());
   valTextWin.value = ''
   uniqueVals.forEach((item, index) => {
-    valTextWin.value = valTextWin.value + item + '\n'
+    if (item != ''){
+      valTextWin.value = valTextWin.value + item + '\n'
+    }
   })
 }

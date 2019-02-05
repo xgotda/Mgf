@@ -108,23 +108,31 @@ function createAddWindow(){
 
 // --- IPC requests to and from renderer ---
 
+// Generic open file dialog so that properties are the same for every such box.
+function openFile() {
+  result = dialog.showOpenDialog(mainWindow, {
+    properties: ['openFile']
+  })
+  return result;
+}
+
 // Open mgf file
 ipcMain.on('ofmRequest', function(e){
   openMgfFile()
 })
 function openMgfFile() {
-  result = dialog.showOpenDialog(mainWindow, {
-    properties: ['openFile']
-  })
+  result = openFile()
   mainWindow.webContents.send('ofmRequest', result)
 }
-// Open spectra file
-ipcMain.on('spectraRequest', function(e){
-  result = dialog.showOpenDialog(mainWindow, {
-    properties: ['openFile']
-  })
-  mainWindow.webContents.send('spectraRequest', result)
-})
+
+// // Open spectra file
+// ipcMain.on('spectraRequest', function(e){
+//   openSpectraFile()
+// })
+// function openSpectraFile() {
+//   result = openFile()
+//   mainWindow.webContents.send('spectraRequest', result)
+// }
 
 // Save file
 ipcMain.on('sfRequest', function(e){
@@ -147,14 +155,6 @@ const mainMenuTemplate = [
     label: 'Ioniser',
     submenu: [
       {
-        label:'Add Glycan',
-        accelerator: process.platform == 'darwin' ? 'Command+G' :
-        'Ctrl+G',
-        click(){
-          createAddWindow();
-        }
-      },
-      {
         label: 'Select mgf file',
         accelerator: process.platform == 'darwin' ? 'Command+O' :
         'Ctrl+O',
@@ -170,6 +170,22 @@ const mainMenuTemplate = [
           saveFile()
         }
       },
+      {
+        label:'Add Glycan',
+        accelerator: process.platform == 'darwin' ? 'Command+G' :
+        'Ctrl+G',
+        click(){
+          createAddWindow();
+        }
+      },
+      // {
+      //   label: 'Select spectra file',
+      //   accelerator: process.platform == 'darwin' ? 'Command+E' :
+      //   'Ctrl+E',
+      //   click(){
+      //     openSpectraFile()
+      //   }
+      // },
       {
         label: 'Quit',
         accelerator: process.platform == 'darwin' ? 'Command+Q' :
