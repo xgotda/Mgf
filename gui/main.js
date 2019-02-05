@@ -13,7 +13,7 @@ let mainWindow
 function createWindow () {
   const windowOptions = {
     width: 580,
-    height: 650,
+    height: 620,
     minWidth: 350,
     minHeight: 300,
     // resizable: false,
@@ -78,7 +78,7 @@ app.on('activate', function () {
 function createAddWindow(){
   addWindow = new BrowserWindow({
     width: 380,
-    height: 185,
+    height: 225,
     minHeight: 200,
     minWidth: 200,
     title:'Add glycan',
