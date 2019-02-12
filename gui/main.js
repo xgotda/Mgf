@@ -3,16 +3,19 @@ const {app, BrowserWindow, Menu} = require('electron')
 const {dialog, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
-require("electron-reload")(__dirname)
+// require("electron-reload")(__dirname)
 
 
 /* Keep a global reference of the window object, if you don't, the window will
  be closed automatically when the JavaScript object is garbage collected. */
 let mainWindow
 
+//*********** PRODUCTION!! ******************
+// process.env.NODE_ENV = 'production'
+
 function createWindow () {
   const windowOptions = {
-    width: 580,
+    width: 590,
     height: 620,
     minWidth: 350,
     minHeight: 300,
@@ -20,8 +23,12 @@ function createWindow () {
     title: app.getName()
   }
   if (process.platform === 'linux') {
-    windowOptions.icon = path.join(__dirname, '../assets/icons/316.png')
+    windowOptions.icon = path.join(__dirname, '/assets/icons/316.png')
   }
+  if (process.platform === 'win64') {
+    windowOptions.icon = path.join(__dirname, '/assets/icons/316.ico')
+  }
+
 
   // Create the browser window.
   mainWindow = new BrowserWindow(windowOptions)
@@ -38,9 +45,11 @@ function createWindow () {
   const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
   Menu.setApplicationMenu(mainMenu)
 
-
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (process.env.NODE_ENV !== 'production'){
+    mainWindow.webContents.openDevTools()
+  }
+
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -78,7 +87,7 @@ app.on('activate', function () {
 function createAddWindow(){
   addWindow = new BrowserWindow({
     width: 380,
-    height: 225,
+    height: 235,
     minHeight: 200,
     minWidth: 200,
     title:'Add glycan',
@@ -100,6 +109,7 @@ function createAddWindow(){
     addWindow = null;
   });
 }
+
 
 /* ---------------------------------------------------------------------------
    In this file you can include the rest of your app's specific main process
@@ -153,6 +163,18 @@ ipcMain.on('staticGlycan:add', function(e, glycan){
   mainWindow.webContents.send('staticGlycan:add', glycan);
   addWindow.close();
 });
+
+// Post process info box
+ipcMain.on('process:show', function(e, message) {
+  const options = {
+  	type: 'info',
+    buttons: ['Ok'],
+  	message: 'Finished Processing',
+    detail: message
+  }
+  const response = dialog.showMessageBox(mainWindow, options)
+})
+
 
 // Create menu template
 const mainMenuTemplate = [
