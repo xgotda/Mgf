@@ -87,9 +87,9 @@ app.on('activate', function () {
 function createAddWindow(){
   addWindow = new BrowserWindow({
     width: 380,
-    height: 235,
-    minHeight: 200,
-    minWidth: 200,
+    height: 250,
+    minHeight: 380,
+    minWidth: 250,
     title:'Add glycan',
     parent:mainWindow,
     resizable: false,
@@ -170,7 +170,7 @@ ipcMain.on('process:show', function(e, message) {
   	type: 'info',
     buttons: ['Ok'],
   	message: 'Finished Processing',
-    detail: message
+    detail: message.toString()
   }
   const response = dialog.showMessageBox(mainWindow, options)
 })

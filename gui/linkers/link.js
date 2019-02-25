@@ -2,6 +2,9 @@ const {PythonShell} = require('python-shell')
 const path = require("path")
 const {ipcRenderer} = require('electron');
 
+const PY_FOLDER = './../engine/'
+
+
 processBtn = document.getElementById('process')
 if(processBtn){
 	processBtn.addEventListener('click', (event) => {
@@ -38,7 +41,7 @@ function do_process(){
 
 	if (fileRead && fileWrite && glycanppm){
 		var options = {
-			scriptPath : path.join(__dirname, '../../engine/'),
+			scriptPath : path.join(__dirname, PY_FOLDER),
 			args : [fileRead, fileWrite, glycans, glycanppm, peptides, peptideppm,
 							dblCharged, tplCharged]
 		}
@@ -52,13 +55,25 @@ function do_process(){
 		// });
 		// ```
 
+		// document.getElementById('feedfs').hidden = "false"
+		document.getElementById('feedback').innerHTML = "Started processing..."
+
+		mgfprocess.on('error', function(error) {
+			ipcRenderer.send('process:show', 'Error: ' + error)
+			console.log(error);
+		})
+
 		mgfprocess.on('message', function(message){
 			ipcRenderer.send('process:show', message)
 			console.log(message);
 		})
 
-
-		console.log('Finished processing .')
+		mgfprocess.end(function(err, code, signal) {
+			if (err) throw err;
+			console.log('code: ' + code +'. signal: ' + signal);
+			document.getElementById('feedback').innerHTML = "Finished processing."
+			console.log('Finished processing .')
+		})
 	} else{
 		ipcRenderer.send('process:show', 'Incomplete information')
 		console.log('something was empty')
